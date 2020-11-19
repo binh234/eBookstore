@@ -39,4 +39,7 @@ $ python manage.py loaddata db.json
 ### Liên kết css, js, ... vào file html
 * Thêm dòng **{% load static %}** vào file html tương ứng
 * Liên kết css, js, ... vào file html
-*Ex:* <link rel="stylesheet" href="{% static 'css/style.css' %}">
+*Ex:* 
+```html
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+```
