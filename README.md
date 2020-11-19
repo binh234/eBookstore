@@ -9,7 +9,7 @@ cd  eBookstore
 
 ## Cài đặt các thư viện cần thiết
 ```
-$ python -m pip install -r requirements.txt
+python -m pip install -r requirements.txt
 ```
 
 ## Chuẩn bị MySQL
@@ -18,13 +18,19 @@ $ python -m pip install -r requirements.txt
 
 ## Migrate data vào MySQL
 ```
-$ python manage.py migrate
+python manage.py migrate
 ```
 
 ## Nạp dữ liệu vào database
 ```
-$ python manage.py loaddata db.json
+python manage.py loaddata db.json
 ```
+
+### Development
+```
+python manage.py runserver
+```
+Mở [localhost:8000](http://localhost:8000).
 
 ### Thêm 1 template mới vào project
 * Thêm file **.html** vào thư mục <app_name>/template/<app_name>
