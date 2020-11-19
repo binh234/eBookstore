@@ -1,0 +1,76 @@
+{% extends 'customer/main.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+    <div class="breadcrumb">
+        <div class="container">
+            <a class="breadcrumb-item" href="{% url 'home' %}">Trang chủ</a>
+            <span class="breadcrumb-item active">Giỏ hàng</span>
+        </div>
+    </div>
+    <div class="container">
+        {% if total > 0 %}
+        <a class="btn btn-outline-dark mb-3" href="{% url 'shop' %}">&#8592; Tiếp tục mua hàng</a>
+        <div class="row">
+            <div class="col-lg-8 col-md-12">
+                {% for item in items %}
+                {% with book=item.book %}
+                <div class="card card-body mb-3">
+                    <div class="row">
+                        <a class="col-md-2 col-sm-4 col-12 cart-product-img" href="{% url 'book_detail' book.ISBN %}">
+                            <img class="book-img" src="{% if book.image_url != '' %} {{ book.image_url }} {% else %} {% static 'images/default_book.png' %} {% endif %}" alt="img">
+                        </a>
+                        <div class="col-sm-8 col-12 cart-product-content">
+                            <a class="cart-product-title" href="{% url 'book_detail' book.ISBN %}">{{ book.name }}</a>
+                            <p class="cart-product-option mt-3">
+                                <span>Tùy chọn: </span>
+                                <span>{{ item.get_option_display }}</span>
+                            </p>
+                            <div class="cart-product-price mt-2">
+                                {% if item.option == "eRent" %}
+                                <p>{{ book.rent_price | floatformat | intcomma:False }}đ/ {{ book.rent_duration }} ngày</p>
+                                {% else %}
+                                <p>{{ book.price | floatformat | intcomma:False }}đ</p>
+                                {% endif %}
+                            </div>
+                            <button data-product="{{book.ISBN}}" data-action="remove" data-option="{{ item.option }}" class="btn btn-primary cart-product-action update-cart mt-3">Xóa</button>
+                        </div>
+                        <div class="col-md-2 col-sm-12 cart-product-quantity">
+                            <input data-product="{{book.ISBN}}" data-action="update" data-option="{{ item.option }}" onfocusout="updateCart(this)" class="text-center" type="number" min="1" onkeypress="return event.charCode >= 48" id="book-quantity" value="{{ item.quantity }}" {% if item.option == 'eBuy' %} disabled {% endif %}>
+                        </div>
+                    </div>
+                    
+                </div>
+                {% endwith %}
+                {% endfor %}
+            </div>
+            <div class="col-lg-4 col-md-12">
+                <div class="card card-body">
+                    <p class="cart-total-page">
+                        <span class="cart-total-text">Tạm tính</span>
+                        <span class="cart-total-price">{{ total | floatformat | intcomma:False }} đ</span>
+                    </p>
+                    <hr>
+                    <p class="cart-total-page">
+                        <span class="cart-total-text font-weight-bold">Tổng cộng</span>
+                        <span class="cart-total-price cart-final-price">{{ total | floatformat | intcomma:False }} đ</span>
+                    </p> 
+                    <a href="{% url 'checkout' %}"><button class="btn-custom yellow mt-3" style="width: 100%;">Thanh toán</button></a>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="text-center">
+            <img src="{% static 'images/emptycart.png' %}" style="height: 300px;">
+            <h6 class="mt-3"> Giỏ hàng của bạn đang trống </h6>
+            <a href="{% url 'shop' %}"><button class="btn-custom yellow mt-3">Tiếp tục mua hàng</button></a>
+        </div>
+        {% endif %}
+    </div>
+            <script>
+function myFunction(item) {
+  console.log(item);
+}
+</script>
+{% endblock %}

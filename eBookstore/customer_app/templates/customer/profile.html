@@ -1,0 +1,32 @@
+{% extends 'customer/main.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+	<div class="breadcrumb">
+        <div class="container">
+            <a class="breadcrumb-item" href="{% url 'home' %}">Trang chủ</a>
+            <span class="breadcrumb-item active">Cài đặt</span>
+        </div>
+    </div>
+
+    <div class="container">
+    	<div class="row">
+    		<div class="col-md-3 col-12">
+    			{% include 'customer/setting_nav.html' %}
+    		</div>
+        	<div class="col-md-9 col-12 card card-body">
+    			<h5>Thông tin tài khoản</h5>
+    			<hr>
+        		<div class="row">
+    				<div class="col-8">
+    					<form action="" method="POST" enctype="multipart/form-data"> {% csrf_token %}
+    		    			{{ form.as_p }}
+    		    			<input class="btn btn-info mt-3" type="submit" value="Lưu thay đổi">
+    		    		</form>
+    				</div>
+        		</div>
+        	</div>
+    	</div>
+    </div>
+{% endblock %}
