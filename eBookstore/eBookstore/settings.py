@@ -45,7 +45,8 @@ INSTALLED_APPS = [
     'active_link',
 
     # Own
-    'customer_app'
+    'customer_app',
+    'manage_app',
 ]
 
 MIDDLEWARE = [
