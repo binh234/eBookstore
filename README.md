@@ -1,5 +1,12 @@
 # eBookstore
 
+## Clone project
+```
+git clone https://github.com/binh234/eBookstore.git
+
+cd  eBookstore
+```
+
 ## Cài đặt các thư viện cần thiết
 ```
 $ python -m pip install -r requirements.txt
@@ -7,7 +14,7 @@ $ python -m pip install -r requirements.txt
 
 ## Chuẩn bị MySQL
 > Đảm bảo có một schema tên **bookstore** với user là **root** và password là **Admin.12345**
-[!Database](https://github.com/binh234/eBookstore/blob/main/screenshots/database.png?raw=true)
+<img src="./screenshots/database.png">
 
 ## Migrate data vào MySQL
 ```
@@ -21,10 +28,10 @@ $ python manage.py loaddata db.json
 
 ### Thêm 1 template mới vào project
 * Thêm file **.html** vào thư mục <app_name>/template/<app_name>
-* Thêm một view function mới vào file <app_name>/views.py
-[!Add view](https://github.com/binh234/eBookstore/blob/main/screenshots/view_func.png?raw=true)
+* Thêm một view function mới vào file <app_name>/view_funnc.py
+<img src="./screenshots/view_func.png">
 * Thêm url mới vào file <app_name>/urls.py theo cấu trúc path('<url_path>', view_func, name='<url_name>')
-[!Add url](https://github.com/binh234/eBookstore/blob/main/screenshots/url.png?raw=true)
+<img src="./screenshots/url.png">
 
 ### Thêm file static (css, js, image, ...) vào project
 * Thêm file *.(css/js/...)* vào thư mục *static/(css/js/...)*
