@@ -191,14 +191,14 @@ class Book(models.Model):
 		return ", ".join(keyword_list)
 
 class Traditional(models.Model):
-	book = models.OneToOneField(Book, on_delete=models.CASCADE, db_column='ISBN')
+	book = models.OneToOneField(Book, on_delete=models.CASCADE, db_column='ISBN', primary_key=True)
 	allowNumber = models.IntegerField(default=1)
 
 	class Meta:
 		db_table = 'traditional'
 
 class Electronic(models.Model):
-	book = models.OneToOneField(Book, on_delete=models.CASCADE, db_column='ISBN')
+	book = models.OneToOneField(Book, on_delete=models.CASCADE, db_column='ISBN', primary_key=True)
 	rentPrice = models.DecimalField(max_digits=10, decimal_places=2)
 	rentDuration = models.IntegerField(default=1)
 	link = models.FileField(upload_to='uploads/')

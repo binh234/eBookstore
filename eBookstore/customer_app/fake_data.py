@@ -57,7 +57,7 @@ for storage in storages:
 
 for storage in storages:
 	n = faker.random_int(5, 20)
-	book_rand = set(random.choices(books, k=n))
+	book_rand = set(random.choices(traditionals, k=n))
 	for book in book_rand:
 		q = faker.random_int(1, 10)
 		Export.objects.create(book=book, storage=storage, exportTime=faker.date_time_this_century(), quantity=q)
