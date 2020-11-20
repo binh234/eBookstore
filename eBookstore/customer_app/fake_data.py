@@ -92,3 +92,10 @@ for order in orders:
 		OrderItem.objects.create(book=book, order=order, quantity=n, option='buy')
 
 
+exports = Export.objects.all()
+imports = Import.objects.all()
+inventory = Inventory.objects.all()
+
+for item in imports:
+	item.importTime = faker.date_time_this_century()
+	item.save()
