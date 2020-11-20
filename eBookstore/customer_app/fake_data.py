@@ -42,3 +42,53 @@ for i in range(50):
 	book.authors.add(*author_rand)
 	[Topic.objects.create(book=book, name=x) for x in topic_rand]
 	[Keyword.objects.create(book=book, keyword=x) for x in keyword_rand]
+
+storages = Storage.objects.all()
+traditionals = Traditional.objects.all()
+customers = Customer.objects.all()
+
+for storage in storages:
+	n = faker.random_int(50, 60)
+	book_rand = set(random.choices(traditionals, k=n))
+	for book in book_rand:
+		q = faker.random_int(3, 20)
+		Import.objects.create(book=book, storage=storage, importTime=faker.date_time_this_century(), quantity=q)
+		Inventory.objects.create(book=book, storage=storage, quantity=q)
+
+for storage in storages:
+	n = faker.random_int(5, 20)
+	book_rand = set(random.choices(books, k=n))
+	for book in book_rand:
+		q = faker.random_int(1, 10)
+		Export.objects.create(book=book, storage=storage, exportTime=faker.date_time_this_century(), quantity=q)
+
+books = Book.objects.all()
+for book in books:
+	n = faker.random_int(0, 7)
+	customer_rand = set(random.choices(customers, k=n))
+	for customer in customer_rand:
+		Review.objects.create(customer=customer, 
+			book=book, 
+			reviewTime=faker.date_time_this_century(),
+			comment=faker.text(250),
+			rating=randint(1, 5))
+
+statuses = ['Unpaid', 'Pending', 'Delivered', 'Cancel', 'Error']
+customer_rand = random.choices(customers, k=10)
+for customer in customer_rand:
+	Order.objects.create(customer=customer,
+		orderTime=faker.date_time_this_year(),
+		status = random.choice(statuses),
+		shippingAddress=faker.address(),
+		complete=True)
+
+option = ['buy', 'eBuy', 'eRent']
+orders = Order.objects.filter(id__gt=3)
+for order in orders:
+	q = faker.random_int(1, 3)
+	book_rand = set(random.choices(books, k=q))
+	for book in book_rand:
+		n = faker.random_int(1, 5)
+		OrderItem.objects.create(book=book, order=order, quantity=n, option='buy')
+
+

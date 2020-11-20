@@ -191,14 +191,14 @@ class Book(models.Model):
 		return ", ".join(keyword_list)
 
 class Traditional(models.Model):
-	book = models.OneToOneField(Book, on_delete=models.CASCADE, db_column='bookISBN')
+	book = models.OneToOneField(Book, on_delete=models.CASCADE, db_column='ISBN')
 	allowNumber = models.IntegerField(default=1)
 
 	class Meta:
 		db_table = 'traditional'
 
 class Electronic(models.Model):
-	book = models.OneToOneField(Book, on_delete=models.CASCADE, db_column='bookISBN')
+	book = models.OneToOneField(Book, on_delete=models.CASCADE, db_column='ISBN')
 	rentPrice = models.DecimalField(max_digits=10, decimal_places=2)
 	rentDuration = models.IntegerField(default=1)
 	link = models.FileField(upload_to='uploads/')
@@ -332,7 +332,7 @@ class Book_Image(models.Model):
 		return self.image.url
 
 class Inventory(models.Model):
-	book = models.ForeignKey(Book, on_delete=models.CASCADE, db_column='bookISBN')
+	book = models.ForeignKey(Traditional, on_delete=models.CASCADE, db_column='bookISBN')
 	storage = models.ForeignKey(Storage, on_delete=models.CASCADE, db_column='storageId')
 	quantity = models.IntegerField()
 
@@ -344,7 +344,7 @@ class Inventory(models.Model):
 		return str(self.id) + " - " + str(self.book) 
 
 class Export(models.Model):
-	book = models.ForeignKey(Book, on_delete=models.CASCADE, db_column='bookISBN')
+	book = models.ForeignKey(Traditional, on_delete=models.CASCADE, db_column='bookISBN')
 	storage = models.ForeignKey(Storage, on_delete=models.CASCADE, db_column='storageId')
 	quantity = models.IntegerField()
 	exportTime = models.DateTimeField(auto_now_add=True)
@@ -357,7 +357,7 @@ class Export(models.Model):
 		return str(self.id) + " - " + str(self.book) 
 
 class Import(models.Model):
-	book = models.ForeignKey(Book, on_delete=models.CASCADE, db_column='bookISBN')
+	book = models.ForeignKey(Traditional, on_delete=models.CASCADE, db_column='bookISBN')
 	storage = models.ForeignKey(Storage, on_delete=models.CASCADE, db_column='storageId')
 	quantity = models.IntegerField()
 	importTime = models.DateTimeField(auto_now_add=True)
