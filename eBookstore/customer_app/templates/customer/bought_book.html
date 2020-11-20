@@ -29,12 +29,12 @@
 				  </tr>
 				</thead>
 				<tbody>
-					{% for book in page_obj %}
-				  	<tr class="clickable-row" data-href="{% url 'book_detail' book.ISBN %}">
-					    <td>{{ book.ISBN }}</td>
-					    <td>{{ book.name }}</td>
-					    <td>{{ book.year }}</td>
-					    <td>{{ book.book_count }}</td>
+					{% for item in page_obj %}
+				  	<tr class="clickable-row" data-href="{% url 'book_detail' item.book %}">
+					    <td>{{ item.book }}</td>
+					    <td>{{ item.book__name }}</td>
+					    <td>{{ item.book__year }}</td>
+					    <td>{{ item.book_count }}</td>
 				  	</tr>
 				  	{% endfor %}
 				</tbody>

@@ -86,12 +86,6 @@ def shop(request):
 	book_list = book_filter.qs
 	book_list = book_list.annotate(avg_rating=Avg("review__rating"))
 
-	order_field = request.GET.get("order")
-	if order_field:
-		if order_field == "avg_rating":
-			order_field = "-avg_rating"
-		book_list = book_list.order_by(order_field)
-
 	paginator = Paginator(book_list, 12) # Show 25 contacts per page.
 
 	page_number = request.GET.get('page')
@@ -156,19 +150,56 @@ def checkout(request):
 	}
 	return render(request, 'customer/checkout.html', context)
 
+def author(request):
+	author_list = Author.objects.all()
+	author_filter = AuthorFilter(request.GET, queryset=author_list)
+	author_list = author_filter.qs
+	author_list = author_list.annotate(book_count=Count("book")).values("id", "name", "book_count")
+
+	paginator = Paginator(author_list, 10) # Show 10 authors per page.
+
+	page_number = request.GET.get('page')
+	page_obj = paginator.get_page(page_number)
+
+	context = {
+		'page_obj': page_obj,
+		'filter': author_filter,
+	}
+	return render(request, 'customer/author.html', context)
+
+def authorBookList(request, pk):
+	author = get_object_or_404(Author, id=pk)
+	book_list = Book.objects.filter(authors__id=pk)
+
+	paginator = Paginator(book_list, 12) # Show 25 contacts per page.
+
+	page_number = request.GET.get('page')
+	page_obj = paginator.get_page(page_number)
+
+	context = {
+		'author': author,
+		'page_obj': page_obj,
+		'object_count': book_list.count(),
+	}
+
+	return render(request, 'customer/author_book_list.html', context)
+
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['customer'])
 def boughtBook(request):
 	customer = request.user.customer
-	book_list = Book.objects.filter(Q(orderitem__option='buy')|Q(orderitem__option='eBuy'),
-	orderitem__order__orderTime__range=['2020-11-01', '2020-12-01'],
-	orderitem__order__customer=customer).annotate(book_count=Sum("orderitem__quantity")).order_by('-book_count')
+	item_list = OrderItem.objects.filter(Q(option='buy')|Q(option='eBuy'), 
+	order__customer=customer,
+	order__complete=True)
+	item_filter = OrderItemFilter(request.GET, queryset=item_list)
+	item_list = item_filter.qs
+	book_list = item_list.values("book", "book__name", "book__year").annotate(
+	book_count=Sum("quantity"))
 	
 	paginator = Paginator(book_list, 10) # Show 10 contacts per page.
 
 	page_number = request.GET.get('page')
 	page_obj = paginator.get_page(page_number)
-	# print(object_filter.form)
 
 	context = {
 		'page_obj': page_obj,
@@ -179,21 +210,23 @@ def boughtBook(request):
 @allowed_users(allowed_roles=['customer'])
 def boughtBookByTopic(request):
 	customer = request.user.customer
-	topic_list = Topic.objects.filter(Q(book__orderitem__option='buy')|Q(book__orderitem__option='eBuy'),
-		book__orderitem__order__orderTime__range=['2020-11-01', '2020-12-01'],
-		book__orderitem__order__customer=customer).values('name').annotate(
-		book_count=Sum("book__orderitem__quantity")).order_by('-book_count')
 
-	topic_filter = BoughtTopicFilter(request.GET, queryset=topic_list)
+	item_list = OrderItem.objects.filter(Q(option='buy')|Q(option='eBuy'), 
+	order__customer=customer,
+	order__complete=True)
+	item_filter = OrderItemFilter(request.GET, queryset=item_list)
+	item_list = item_filter.qs
+	topic_list = item_list.values("book__topic__name").annotate(book_count=Sum("quantity"))
 
 	paginator = Paginator(topic_list, 10) # Show 10 contacts per page.
+	print(topic_list.query)
 
 	page_number = request.GET.get('page')
 	page_obj = paginator.get_page(page_number)
-	# print(object_filter.form)
 
 	context = {
 		'page_obj': page_obj,
+		'filter':item_filter,
 	}
 	return render(request, 'customer/bought_book_topic.html', context)
 
@@ -286,45 +319,6 @@ def changePassword(request):
 	}
 	return render(request, 'customer/change_password.html', context)
 
-def author(request):
-	author_list = Author.objects.all()
-	author_filter = AuthorFilter(request.GET, queryset=author_list)
-	author_list = author_filter.qs
-	author_list = author_list.annotate(book_count=Count("book")).values("id", "name", "book_count")
-
-	order_field = request.GET.get("order")
-	print(order_field)
-	if order_field:
-		author_list = author_list.order_by(order_field)
-
-	paginator = Paginator(author_list, 10) # Show 10 authors per page.
-
-	page_number = request.GET.get('page')
-	page_obj = paginator.get_page(page_number)
-
-	context = {
-		'page_obj': page_obj,
-		'filter': author_filter,
-	}
-	return render(request, 'customer/author.html', context)
-
-def authorBookList(request, pk):
-	author = get_object_or_404(Author, id=pk)
-	book_list = Book.objects.filter(authors__id=pk)
-
-	paginator = Paginator(book_list, 12) # Show 25 contacts per page.
-
-	page_number = request.GET.get('page')
-	page_obj = paginator.get_page(page_number)
-
-	context = {
-		'author': author,
-		'page_obj': page_obj,
-		'object_count': book_list.count(),
-	}
-
-	return render(request, 'customer/author_book_list.html', context)
-
 @login_required(login_url='login')
 def updateItem(request):
 	data = json.loads(request.body)
@@ -336,10 +330,6 @@ def updateItem(request):
 	if quantity == 0:
 		quantity = 1
 	option = data['option']
-
-	print("Product ID:", productId)
-	print("action:", action)
-	print("quantity:", quantity)
 
 	customer = request.user.customer
 	book = get_object_or_404(Book, ISBN=productId)

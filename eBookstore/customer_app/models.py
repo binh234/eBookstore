@@ -81,7 +81,7 @@ class Order(models.Model):
 		book = Book.objects.get(ISBN=bookISBN)
 		order_item, created = self.orderitem_set.get_or_create(book=book)
 		if created == False and order_item.option != option:
-			return created, f'Bạn không thể có 2 lựa chọn mua hàng khác nhau cho cùng một sách'
+			return created, f'Bạn không được phép có 2 lựa chọn mua hàng khác nhau cho cùng một sách'
 		order_item.option = option
 
 		if action == 'update':

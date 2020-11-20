@@ -40,17 +40,20 @@ class MultiValueCharFilter(filters.BaseCSVFilter, filters.CharFilter):
         print("time:", stop-start)
         return self.get_method(qs)(query)
 
-class OrderFilter(filters.ChoiceFilter):
+class OrderByFilter(filters.ChoiceFilter):
     def filter(self, qs, value):
-        return qs
+        if value:
+            return qs.order_by(value)
+        else:
+            return qs
 
 class BookFilter(FilterSet):
     BOOK_ORDER_CHOICE = (
         ('name', 'Tên sách'),
         ('price', 'Giá bán'),
-        ('avg_rating', 'Đánh giá')
+        ('-avg_rating', 'Đánh giá')
     )
-    order = OrderFilter(choices=BOOK_ORDER_CHOICE, label='Sắp xếp theo')
+    order = OrderByFilter(choices=BOOK_ORDER_CHOICE, label='Sắp xếp theo')
 
     ISBN = CharFilter(field_name='ISBN', lookup_expr='icontains', label='ISBN')
     name = CharFilter(lookup_expr='icontains', label='Tên sách')
@@ -94,7 +97,7 @@ class AuthorFilter(FilterSet):
         ('name', 'Tên'),
         ('book_count', 'Số lượng sách'),
     )
-    order = OrderFilter(choices=ORDER_AUTHOR_CHOICE, label='Sắp xếp theo')
+    order = OrderByFilter(choices=ORDER_AUTHOR_CHOICE, label='Sắp xếp theo')
     topic = MultiValueCharFilter(field_name='book__topic__name', 
         lookup_expr="icontains", 
         label="Thể loại", 
@@ -116,6 +119,14 @@ class AuthorFilter(FilterSet):
     def topicFilter(self, queryset, name, value):
         field_name = "book__topic"
         return queryset.filter(**{field_name: value}).distinct()
+
+class OrderItemFilter(FilterSet):
+    order_date = DateFromToRangeFilter(field_name='order__orderTime', label="Thời gian mua")
+
+    class Meta:
+        model = OrderItem
+        fields = ['order_date']
+        
 
 class BoughtTopicFilter(FilterSet):
     order_date = DateFromToRangeFilter(field_name='book__orderitem__order__orderTime', label="Thời gian mua")

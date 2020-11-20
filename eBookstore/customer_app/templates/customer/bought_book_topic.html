@@ -30,7 +30,7 @@
 			<tbody>
 				{% for topic in page_obj %}
 			  	<tr>
-				    <td>{{ topic.name }}</td>
+				    <td>{{ topic.book__topic__name }}</td>
 				    <td>{{ topic.book_count }}</td>
 			  	</tr>
 			  	{% endfor %}
