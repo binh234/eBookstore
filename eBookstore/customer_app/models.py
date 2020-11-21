@@ -31,7 +31,7 @@ class Customer(models.Model):
 		return self.name
 
 class Staff(models.Model):
-	storage = models.ForeignKey(Storage, on_delete=models.SET_NULL, null=True, blank=True, db_column='storageId')
+	storage = models.ForeignKey(Storage, on_delete=models.PROTECT, db_column='storageId')
 	user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True, db_column='userId')
 	email = models.EmailField(blank=True)
 	name = models.CharField(max_length=100, blank=True)
@@ -58,7 +58,7 @@ class Order(models.Model):
 		('Error', 'Error')
 	]
 
-	customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True, blank=True, db_column='customerId')
+	customer = models.ForeignKey(Customer, on_delete=models.CASCADE, db_column='customerId')
 	staff = models.ForeignKey(Staff, on_delete=models.SET_NULL, null=True, blank=True, db_column='staffId')
 	orderTime = models.DateTimeField(null=True)
 	lastUpdate = models.DateTimeField(auto_now=True)
@@ -264,7 +264,7 @@ class Payment(models.Model):
 		('transfer', 'transfer')
 	]
 
-	customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True, blank=True, db_column='customerId')
+	customer = models.ForeignKey(Customer, on_delete=models.CASCADE, db_column='customerId')
 	order = models.ForeignKey(Order, on_delete=models.CASCADE, db_column='orderId')
 	staff = models.ForeignKey(Staff, on_delete=models.SET_NULL, null=True, blank=True, db_column='staffId')
 

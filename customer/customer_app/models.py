@@ -33,7 +33,7 @@ class Customer(models.Model):
 		return self.name
 
 class Staff(models.Model):
-	storage = models.ForeignKey(Storage, on_delete=models.CASCADE, null=True, blank=True, db_column='storageId')
+	storage = models.ForeignKey(Storage, on_delete=models.PROTECT, db_column='storageId')
 	user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True, db_column='userId')
 	email = models.EmailField(blank=True)
 	name = models.CharField(max_length=100, blank=True)
@@ -252,7 +252,7 @@ class OrderItem(models.Model):
 		return str(self.id) + " - " + str(self.book) 
 
 class Card(models.Model):
-	customer = models.ForeignKey(Customer, on_delete=models.CASCADE, null=True, blank=True, db_column='customerId')
+	customer = models.ForeignKey(Customer, on_delete=models.CASCADE, db_column='customerId')
 	ownerName = models.CharField(max_length=50)
 	code = CardNumberField(max_length=20)
 	bank = models.CharField(max_length=50)
