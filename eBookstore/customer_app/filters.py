@@ -10,12 +10,7 @@ from .models import *
 from functools import reduce
 import time
 
-
-
 class MultiValueCharFilter(filters.BaseCSVFilter, filters.CharFilter):
-    """
-    Custom filter to accept multiple CharFilter strings provided using CSVWidget
-    """
     def filter(self, qs, value):
         start = time.clock()
         values = value or []
@@ -39,6 +34,16 @@ class MultiValueCharFilter(filters.BaseCSVFilter, filters.CharFilter):
         stop = time.clock()
         print("time:", stop-start)
         return self.get_method(qs)(query)
+
+class BooleanForeignFilter(filters.BooleanFilter):
+    def filter(self, qs, value):
+        if value is not None:
+            lookup = self.field_name + '__' + self.lookup_expr
+            value = not value
+            print(lookup, value)
+            return self.get_method(qs)(**{lookup: value})
+        else:
+            return qs
 
 class OrderByFilter(filters.ChoiceFilter):
     def filter(self, qs, value):
@@ -72,8 +77,8 @@ class BookFilter(FilterSet):
         distinct=True, 
         help_text=None)
     publisher = ModelChoiceFilter(queryset=Publisher.objects.all(), label='Nhà xuất bản')
-    traditional = BooleanFilter(label='Sách truyền thống')
-    electronic = BooleanFilter(label='Sách điện tử')
+    traditional = BooleanForeignFilter(field_name='traditional', lookup_expr='isnull', label='Sách truyền thống')
+    electronic = BooleanForeignFilter(field_name='electronic', lookup_expr='isnull', label='Sách điện tử')
     authors = ModelMultipleChoiceFilter(queryset=Author.objects.all(), label='Tác giả')
     # topics = ModelMultipleChoiceFilter(field_name='topic__name', queryset=Topic.objects.values("name").distinct(), label='Thể loại')
 

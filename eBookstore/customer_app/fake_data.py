@@ -94,8 +94,16 @@ for order in orders:
 
 exports = Export.objects.all()
 imports = Import.objects.all()
-inventory = Inventory.objects.all()
+reviews = Review.objects.all()
 
 for item in imports:
 	item.importTime = faker.date_time_this_century()
+	item.save()
+
+for item in exports:
+	item.exportTime = faker.date_time_this_century()
+	item.save()
+
+for item in reviews:
+	item.reviewTime = faker.date_time_this_century()
 	item.save()
