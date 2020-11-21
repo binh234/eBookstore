@@ -29,7 +29,7 @@ python manage.py loaddata db.json
 ## Phân quyền cho nhóm người dùng
 > Chạy file **grant_customer.sql** trong MySQL để tạo và phân quyền cho customer
 
-### Development cho khách hàng
+### Phát triển ứng dụng cho khách hàng
 ```
 cd eBookstore/customer
 
@@ -37,7 +37,7 @@ python manage.py runserver
 ```
 Mở [localhost:8000](http://localhost:8000).
 
-### Development cho nhân viên
+### Phát triển ứng dụng cho nhân viên
 ```
 cd eBookstore/staff
 
