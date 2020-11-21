@@ -26,8 +26,21 @@ python manage.py migrate
 python manage.py loaddata db.json
 ```
 
-### Development
+## Phân quyền cho nhóm người dùng
+> Chạy file **grant_customer.sql** trong MySQL để tạo và phân quyền cho customer
+
+### Development cho khách hàng
 ```
+cd eBookstore/customer
+
+python manage.py runserver
+```
+Mở [localhost:8000](http://localhost:8000).
+
+### Development cho nhân viên
+```
+cd eBookstore/staff
+
 python manage.py runserver
 ```
 Mở [localhost:8000](http://localhost:8000).
