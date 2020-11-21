@@ -4,7 +4,7 @@
 ```
 git clone https://github.com/binh234/eBookstore.git
 
-cd  eBookstore
+cd  eBookstore/eBookstore
 ```
 
 ## Cài đặt các thư viện cần thiết
