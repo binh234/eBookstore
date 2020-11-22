@@ -13,8 +13,9 @@ class Storage(models.Model):
 
 class Customer(models.Model):
 	user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True, db_column='userId')
+	firstName = models.CharField(max_length=50)
+	lastName = models.CharField(max_length=30)
 	email = models.EmailField(blank=True)
-	name = models.CharField(max_length=100, blank=True)
 	phone = models.CharField(max_length=20, blank=True)
 	address = models.CharField(max_length=120, blank=True)
 	avatar = models.ImageField(blank=True)
@@ -22,6 +23,11 @@ class Customer(models.Model):
 	class Meta:
 		db_table = 'customer'
 
+	@property
+	def name(self):
+		return self.firstName + " " + self.lastName	
+
+	@property
 	def profile_url(self):
 		if self.avatar:
 			return self.avatar.url
@@ -33,14 +39,20 @@ class Customer(models.Model):
 class Staff(models.Model):
 	storage = models.ForeignKey(Storage, on_delete=models.PROTECT, db_column='storageId')
 	user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True, db_column='userId')
+	firstName = models.CharField(max_length=50)
+	lastName = models.CharField(max_length=30)
 	email = models.EmailField(blank=True)
-	name = models.CharField(max_length=100, blank=True)
 	phone = models.CharField(max_length=20, blank=True)
 	avatar = models.ImageField(blank=True)
 
 	class Meta:
 		db_table = 'staff'
 
+	@property
+	def name(self):
+		return self.firstName + " " + self.lastName	
+
+	@property
 	def profile_url(self):
 		if self.profile_image:
 			return self.profile_image.url
@@ -346,12 +358,13 @@ class Inventory(models.Model):
 class Export(models.Model):
 	book = models.ForeignKey(Traditional, on_delete=models.CASCADE, db_column='bookISBN')
 	storage = models.ForeignKey(Storage, on_delete=models.CASCADE, db_column='storageId')
+	staff = models.ForeignKey(Staff, on_delete=models.PROTECT, db_column='staffId')
 	quantity = models.IntegerField()
 	exportTime = models.DateTimeField(auto_now_add=True)
 
 	class Meta:
 		db_table = 'export_history'
-		unique_together = (('book', 'storage', 'exportTime'))
+		unique_together = (('book', 'storage', 'staff', 'exportTime'))
 
 	def __str__(self):
 		return str(self.id) + " - " + str(self.book) 
@@ -359,12 +372,13 @@ class Export(models.Model):
 class Import(models.Model):
 	book = models.ForeignKey(Traditional, on_delete=models.CASCADE, db_column='bookISBN')
 	storage = models.ForeignKey(Storage, on_delete=models.CASCADE, db_column='storageId')
+	staff = models.ForeignKey(Staff, on_delete=models.PROTECT, db_column='staffId')
 	quantity = models.IntegerField()
 	importTime = models.DateTimeField(auto_now_add=True)
 
 	class Meta:
 		db_table = 'import_history'
-		unique_together = (('book', 'storage', 'importTime'))
+		unique_together = (('book', 'storage', 'staff', 'importTime'))
 
 	def __str__(self):
 		return str(self.id) + " - " + str(self.book) 

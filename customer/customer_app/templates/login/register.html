@@ -18,7 +18,13 @@
                             <div class="input-group-append">
                                 <span class="input-group-text"><i class="fas fa-user"></i></span>
                             </div>
-                            <input type="text" name="name" placeholder="Họ tên">
+                            <input type="text" name="firstName" placeholder="Họ và tên đệm">
+                        </div>
+                        <div class="input-group mb-2">
+                            <div class="input-group-append">
+                                <span class="input-group-text"><i class="fas fa-user"></i></span>
+                            </div>
+                            <input type="text" name="lastName" placeholder="Tên">
                         </div>
                         <div class="input-group mb-2">
                             <div class="input-group-append">
@@ -67,10 +73,10 @@
 
         //Query All input fields
         var form_fields = document.getElementsByTagName('input')
-        form_fields[2].placeholder='Email';
-        form_fields[3].placeholder='Tên đăng nhập';
-        form_fields[4].placeholder='Mật khẩu';
-        form_fields[5].placeholder='Nhập lại mật khẩu';
+        form_fields[3].placeholder='Email';
+        form_fields[4].placeholder='Tên đăng nhập';
+        form_fields[5].placeholder='Mật khẩu';
+        form_fields[6].placeholder='Nhập lại mật khẩu';
 
 
         for (var field in form_fields){ 

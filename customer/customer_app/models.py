@@ -14,8 +14,9 @@ class Storage(models.Model):
 
 class Customer(models.Model):
 	user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True, db_column='userId')
+	firstName = models.CharField(max_length=50)
+	lastName = models.CharField(max_length=30)
 	email = models.EmailField(blank=True)
-	name = models.CharField(max_length=100, blank=True)
 	phone = models.CharField(max_length=20, blank=True)
 	address = models.CharField(max_length=120, blank=True)
 	avatar = models.ImageField(blank=True)
@@ -24,6 +25,11 @@ class Customer(models.Model):
 		managed = False
 		db_table = 'customer'
 
+	@property
+	def name(self):
+		return self.firstName + " " + self.lastName	
+
+	@property
 	def profile_url(self):
 		if self.avatar:
 			return self.avatar.url
@@ -35,15 +41,22 @@ class Customer(models.Model):
 class Staff(models.Model):
 	storage = models.ForeignKey(Storage, on_delete=models.PROTECT, db_column='storageId')
 	user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True, db_column='userId')
+	firstName = models.CharField(max_length=50)
+	lastName = models.CharField(max_length=30)
 	email = models.EmailField(blank=True)
-	name = models.CharField(max_length=100, blank=True)
 	phone = models.CharField(max_length=20, blank=True)
+	address = models.CharField(max_length=120, blank=True)
 	avatar = models.ImageField(blank=True)
 
 	class Meta:
 		managed = False
 		db_table = 'staff'
 
+	@property
+	def name(self):
+		return self.firstName + " " + self.lastName	
+
+	@property
 	def profile_url(self):
 		if self.profile_image:
 			return self.profile_image.url

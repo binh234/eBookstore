@@ -49,8 +49,9 @@ def register_page(request):
 			user.groups.add(group)
 
 			email = request.POST.get("email")
-			name = request.POST.get("name")
-			customer = Customer.objects.create(user=user, email=email, name=name)
+			firstName = request.POST.get("firstName")
+			lastName = request.POST.get("lastName")
+			customer = Customer.objects.create(user=user, email=email, firstName=firstName, lastName=lastName)
 
 			messages.success(request, "Đăng ký tài khoản thành công")
 			return redirect('login')

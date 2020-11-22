@@ -36,7 +36,8 @@ class RegisterForm(UserCreationForm):
 			return password2
 
 class CustomerForm(ModelForm):
-	name = forms.CharField(label='Họ tên')
+	firstName = forms.CharField(label='Họ và tên đệm')
+	lastName = forms.CharField(label='Tên')
 	phone = forms.CharField(label='Số điện thoại', required=False)
 	address = forms.CharField(label='Địa chỉ', required=False)
 	avatar = forms.ImageField(label='Ảnh đại diện')

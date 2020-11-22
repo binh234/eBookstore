@@ -47,20 +47,35 @@ storages = Storage.objects.all()
 traditionals = Traditional.objects.all()
 customers = Customer.objects.all()
 
+for i in range(40):
+	Staff.objects.create(
+		storage = random.choice(storages),
+		user=None,
+		email = faker.email(),
+		firstName = faker.first_name(),
+		lastName = faker.last_name(),
+		phone = '0' +str(faker.random_int(902387328, 999999999)),
+		avatar=None
+	)
+
 for storage in storages:
 	n = faker.random_int(50, 60)
 	book_rand = set(random.choices(traditionals, k=n))
+	staffs = Staff.objects.filter(storage=storage)
 	for book in book_rand:
 		q = faker.random_int(3, 20)
-		Import.objects.create(book=book, storage=storage, importTime=faker.date_time_this_century(), quantity=q)
+		Import.objects.create(book=book, 
+			storage=storage, importTime=faker.date_time_this_century(), quantity=q, staff=random.choice(staffs))
 		Inventory.objects.create(book=book, storage=storage, quantity=q)
 
 for storage in storages:
 	n = faker.random_int(5, 20)
 	book_rand = set(random.choices(traditionals, k=n))
+	staffs = Staff.objects.filter(storage=storage)
 	for book in book_rand:
 		q = faker.random_int(1, 10)
-		Export.objects.create(book=book, storage=storage, exportTime=faker.date_time_this_century(), quantity=q)
+		Export.objects.create(book=book, 
+			storage=storage, exportTime=faker.date_time_this_century(), quantity=q, staff=random.choice(staffs))
 
 books = Book.objects.all()
 for book in books:
@@ -108,13 +123,14 @@ for item in reviews:
 	item.reviewTime = faker.date_time_this_century()
 	item.save()
 
-storages = Storage.objects.all()
-for i in range(40):
-	Staff.objects.create(
-		storage = random.choice(storages),
-		user=None,
-		email = faker.email(),
-		name = faker.name(),
-		phone = '0' +str(faker.random_int(902387328, 999999999)),
-		avatar=None
-	)
+exports = Export.objects.all()
+imports = Import.objects.all()
+for item in imports:
+	staffs = Staff.objects.filter(storage=item.storage)
+	item.staff = random.choice(staffs)
+	item.save()
+
+for item in exports:
+	staffs = Staff.objects.filter(storage=item.storage)
+	item.staff = random.choice(staffs)
+	item.save()
