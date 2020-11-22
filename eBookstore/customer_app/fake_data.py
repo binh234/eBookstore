@@ -107,3 +107,14 @@ for item in exports:
 for item in reviews:
 	item.reviewTime = faker.date_time_this_century()
 	item.save()
+
+storages = Storage.objects.all()
+for i in range(40):
+	Staff.objects.create(
+		storage = random.choice(storages),
+		user=None,
+		email = faker.email(),
+		name = faker.name(),
+		phone = '0' +str(faker.random_int(902387328, 999999999)),
+		avatar=None
+	)
