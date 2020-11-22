@@ -126,17 +126,36 @@ class AuthorFilter(FilterSet):
         return queryset.filter(**{field_name: value}).distinct()
 
 class OrderItemFilter(FilterSet):
-    order_date = DateFromToRangeFilter(field_name='order__orderTime', label="Thời gian mua")
+    order_date = DateFromToRangeFilter(field_name='order__orderTime', label="Ngày mua")
 
     class Meta:
         model = OrderItem
         fields = ['order_date']
         
+class OrderFilter(FilterSet):
+    BOOK_CHOICE = (
+        ('both', 'Cả sách điện tử và truyền thống'),
+    )
 
-class BoughtTopicFilter(FilterSet):
-    order_date = DateFromToRangeFilter(field_name='book__orderitem__order__orderTime', label="Thời gian mua")
+    order_date = DateFromToRangeFilter(field_name='orderTime', label="Ngày đặt hàng")
+    status = MultipleChoiceFilter(field_name='status', 
+        choices=Order.ORDER_STATUS, 
+        label='Trạng thái', 
+        widget=forms.CheckboxSelectMultiple())
+    book_type = ChoiceFilter(field_name='orderitem__option', 
+        choices = BOOK_CHOICE,
+        label = 'Loại sách', 
+        method = 'bookFilter')
 
     class Meta:
-        model = Topic
-        fields = ['order_date']
+        model = Order
+        fields = ['order_date', 'book_type', 'status']
+
+    def bookFilter(self, queryset, name, value):
+        if value is None:
+            return queryset
+        elif value == 'both':
+            subquery = OrderItem.objects.filter(~Q(option='buy')).values_list("order_id", flat=True)
+
+        return queryset.filter(**{name: 'buy'}, id__in=subquery).distinct()
             

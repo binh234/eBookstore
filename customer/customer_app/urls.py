@@ -24,11 +24,16 @@ urlpatterns = [
 	path('shop/', shop, name='shop'),
     path('shop/<str:pk>/', book_detail, name='book_detail'),
 
-    path('bought-book/', boughtBook, name='bought-book'),
-    path('bought-book-by-topic/', boughtBookByTopic, name='bought-book-by-topic'),
-
     path('cart/', cart, name='cart'),
     path('checkout/', checkout, name='checkout'),
+
+    path('order/', order, name='order'),
+
+    path('author/', author, name='author'),
+    path('author/<str:pk>/', authorBookList, name='author-book-list'),
+
+    path('bought-book/', boughtBook, name='bought-book'),
+    path('bought-book-by-topic/', boughtBookByTopic, name='bought-book-by-topic'),
 
     path('profile/', profile, name='profile'),
     path('card/', cardList, name='card-list'),
@@ -36,9 +41,6 @@ urlpatterns = [
     path('card/<str:pk>/delete/', cardDelete, name='card-delete'),
     path('card/<str:pk>/update/', cardUpdate, name='card-update'),
     path('change-password/', changePassword, name='change-password'),
-
-    path('author/', author, name='author'),
-    path('author/<str:pk>/', authorBookList, name='author-book-list'),
 
 	path('update-item/', updateItem, name='update-item'),
     path('process-order/', processOrder, name='process-order'),

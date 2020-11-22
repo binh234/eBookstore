@@ -54,11 +54,11 @@ class Staff(models.Model):
 
 class Order(models.Model):
 	ORDER_STATUS = [
-		('Unpaid', 'Unpaid'),
-		('Pending', 'Pending'),
-		('Delivered', 'Delivered'),
-		('Cancel', 'Cancel'),
-		('Error', 'Error')
+		('Unpaid', 'Chưa thanh toán'),
+		('Pending', 'Đang xử lý'),
+		('Delivered', 'Đã xuất kho'),
+		('Cancel', 'Đã hủy'),
+		('Error', 'Lỗi')
 	]
 
 	customer = models.ForeignKey(Customer, on_delete=models.CASCADE, null=True, blank=True, db_column='customerId')
@@ -77,6 +77,14 @@ class Order(models.Model):
 	def shipping(self):
 		traditional_item = self.orderitem_set.filter(option='buy')
 		return traditional_item.exists()
+
+	@property
+	def total(self):
+		return sum([item.subtotal for item in self.orderitem_set.all()])
+
+	@property
+	def payment_method(self):
+		return "Chuyển khoản"
 
 	def __str__(self):
 		return str(self.id) + " - " + str(self.customer)
@@ -272,8 +280,8 @@ class Card(models.Model):
 
 class Payment(models.Model):
 	PAYMENT_METHOD = [
-		('credit', 'credit'),
-		('transfer', 'transfer')
+		('credit', 'Thanh toán thẻ'),
+		('transfer', 'Chuyển khoản')
 	]
 
 	customer = models.ForeignKey(Customer, on_delete=models.CASCADE, null=True, blank=True, db_column='customerId')

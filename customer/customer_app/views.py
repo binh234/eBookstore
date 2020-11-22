@@ -150,6 +150,27 @@ def checkout(request):
 	}
 	return render(request, 'customer/checkout.html', context)
 
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['customer'])
+def order(request):
+	customer = request.user.customer
+	order_list = Order.objects.filter(customer=customer, complete=True)
+	order_filter = OrderFilter(request.GET, queryset=order_list)
+
+	order_list = order_filter.qs
+	order_list = order_list.order_by("-orderTime").prefetch_related("orderitem_set")
+
+	paginator = Paginator(order_list, 10) # Show 10 authors per page.
+
+	page_number = request.GET.get('page')
+	page_obj = paginator.get_page(page_number)
+
+	context = {
+		'page_obj': page_obj,
+		'filter': order_filter,
+	}
+	return render(request, 'customer/order.html', context)
+
 def author(request):
 	author_list = Author.objects.all()
 	author_filter = AuthorFilter(request.GET, queryset=author_list)
