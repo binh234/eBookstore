@@ -91,7 +91,6 @@ def shop(request):
 
 	page_number = request.GET.get('page')
 	page_obj = paginator.get_page(page_number)
-	# print(object_filter.form)
 
 	context = {
 		'page_obj': page_obj,
@@ -242,7 +241,6 @@ def boughtBookByTopic(request):
 	topic_list = item_list.values("book__topic__name").annotate(book_count=Sum("quantity"))
 
 	paginator = Paginator(topic_list, 10) # Show 10 contacts per page.
-	print(topic_list.query)
 
 	page_number = request.GET.get('page')
 	page_obj = paginator.get_page(page_number)
