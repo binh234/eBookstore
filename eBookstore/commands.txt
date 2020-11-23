@@ -1,0 +1,7 @@
+pip install django
+pip install django-filter
+pip install mysql-connector-python
+pip install django-active-link
+pip install django-credit-cards
+pip install faker
+pip install psycopg2
