@@ -9,7 +9,7 @@ cd  eBookstore/eBookstore
 
 ## Cài đặt các thư viện cần thiết
 ```
-python -m pip install -r requirements.txt
+pip install -r requirements.txt
 ```
 
 ## Chuẩn bị MySQL
