@@ -5,3 +5,5 @@ pip install django-active-link
 pip install django-credit-cards
 pip install faker
 pip install psycopg2
+pip install mysqlclient
+pip install pillow
