@@ -16,7 +16,7 @@ conda create --name <env_name> python=3.8
 
 activate <env_name>
 ```
-> Thay <env_name> bằng tên môi trường cần tạo
+> Thay <env_name> bằng tên môi trường cần tạo \\
 > **Lưu ý**: Để đảm bảo project hoạt động tốt, sử dụng lệnh *activate* để kích hoạt môi trường ảo trước khi thực hiện các lệnh bên dưới
 
 ## Cài đặt các thư viện cần thiết
