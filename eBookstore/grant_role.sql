@@ -1,4 +1,5 @@
 # Create role for customer
+DROP ROLE IF EXISTS 'bookstore_customer';
 CREATE ROLE 'bookstore_customer';
 use bookstore;
 
@@ -37,6 +38,7 @@ GRANT SELECT ON topic TO 'bookstore_customer';
 
 
 # Create role for staff
+DROP ROLE IF EXISTS 'bookstore_staff';
 CREATE ROLE 'bookstore_staff';
 USE bookstore;
 
@@ -76,9 +78,15 @@ GRANT SELECT ON review TO 'bookstore_staff';
 
 
 # Grant role for customer and staff
+DROP USER IF EXISTS 'customer'@'localhost';
+DROP USER IF EXISTS 'staff'@'localhost';
 CREATE USER 'customer'@'localhost' IDENTIFIED BY 'Admin.12345';
 CREATE USER 'staff'@'localhost' IDENTIFIED BY 'Admin.12345';
 USE bookstore;
 
 GRANT 'bookstore_customer' TO 'customer'@'localhost';
 GRANT 'bookstore_staff' TO 'staff'@'localhost';
+
+SET DEFAULT ROLE ALL TO
+  'customer'@'localhost',
+  'staff'@'localhost';
