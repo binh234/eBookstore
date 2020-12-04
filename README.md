@@ -59,9 +59,9 @@ Mở [localhost:8000](http://localhost:8000).
 
 ### Thêm 1 template mới vào project
 * Thêm file **.html** vào thư mục <app_name>/template/<app_name>
-* Thêm một view function mới vào file <app_name>/view_funnc.py
+* Thêm một view function mới vào file <app_name>/views.py
 <img src="./screenshots/view_func.png">
-* Thêm url mới vào file <app_name>/urls.py theo cấu trúc path('<url_path>', view_func, name='<url_name>')
+* Thêm url mới vào file <app_name>/urls.py theo cấu trúc path('<url_path>', <view_func>, name='<url_name>')
 <img src="./screenshots/url.png">
 
 ### Thêm file static (css, js, image, ...) vào project
