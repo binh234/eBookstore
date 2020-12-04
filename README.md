@@ -7,6 +7,18 @@ git clone https://github.com/binh234/eBookstore.git
 cd  eBookstore/eBookstore
 ```
 
+## Cài đặt Anaconda
+> Tải và cài đặt Anoconda tại đây: [Anaconda installation](https://docs.anaconda.com/anaconda/install/)
+
+### Tạo và sử dụng môi trường ảo python với conda
+```
+conda create --name <env_name> python=3.8
+
+activate <env_name>
+```
+> Thay <env_name> bằng tên môi trường cần tạo
+> **Lưu ý**: Để đảm bảo project hoạt động tốt, sử dụng lệnh *activate* để kích hoạt môi trường ảo trước khi thực hiện các lệnh bên dưới
+
 ## Cài đặt các thư viện cần thiết
 ```
 pip install -r requirements.txt
@@ -27,7 +39,7 @@ python manage.py loaddata db.json
 ```
 
 ## Phân quyền cho nhóm người dùng
-> Chạy file **grant_customer.sql** trong MySQL để tạo và phân quyền cho customer
+> Chạy file **grant_role.sql** trong MySQL để tạo và phân quyền cho các nhóm người dùng
 
 ### Phát triển ứng dụng cho khách hàng
 ```
