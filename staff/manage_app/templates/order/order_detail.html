@@ -90,12 +90,12 @@
 
                   <div class = "col-4 d-flex align-items-center justify-content-center">
                     {% if order.can_cancel %}
-                    <a class="btn btn-danger" href="">Huỷ đơn</a>
+                    <a class="btn btn-danger" href="{% url 'order_cancel' order.id %}">Huỷ đơn</a>
                     {% endif %}
                   </div>
                   <div class = "col-4">
                     {% if order.can_export %}
-                    <a class="btn btn-primary float-right" href="">Xuất kho</a>
+                    <a class="btn btn-primary float-right" href="{% url 'order_export' order.id %}">Xuất kho</a>
                     {% endif %}
                   </div>
                 </div>

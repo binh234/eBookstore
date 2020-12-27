@@ -74,7 +74,7 @@
             <div class="card card-profile">
               <div class="card-avatar">
                 <a href="javascript:;">
-                  <img class="img" src="{% static 'images/profile.jpg' %}" />
+                  <img class="img" src="{{ staff.profile_url }}" alt="@{{ staff.name }}" />
                 </a>
               </div>
               <div class="card-body">

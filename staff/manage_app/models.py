@@ -58,8 +58,8 @@ class Staff(models.Model):
 
 	@property
 	def profile_url(self):
-		if self.profile_image:
-			return self.profile_image.url
+		if self.avatar:
+			return self.avatar.url
 		return "/static/images/default_profile.jpg"
 
 	def __str__(self):
