@@ -136,6 +136,10 @@ class OrderFilter(FilterSet):
     BOOK_CHOICE = (
         ('both', 'Cả sách điện tử và truyền thống'),
     )
+    ORDER_BY_CHOICE = (
+        ('-orderTime', 'Thời gian đặt hàng'),
+        ('-book_count', 'Số lượng sách')
+    )
 
     order_date = DateFromToRangeFilter(field_name='orderTime', label="Ngày đặt hàng")
     status = MultipleChoiceFilter(field_name='status', 
@@ -146,10 +150,11 @@ class OrderFilter(FilterSet):
         choices = BOOK_CHOICE,
         label = 'Loại sách', 
         method = 'bookFilter')
+    order = OrderByFilter(choices=ORDER_BY_CHOICE, label='Sắp xếp theo')
 
     class Meta:
         model = Order
-        fields = ['order_date', 'book_type', 'status']
+        fields = ['order_date', 'book_type', 'order', 'status']
 
     def bookFilter(self, queryset, name, value):
         if value is None:

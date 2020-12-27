@@ -34,6 +34,7 @@
 					{% endif %}
 				{% endfor %}
 
+				<br>
 				<button type="submit" class="btn btn-primary float-right">Tìm kiếm</button>
 			</form>
 		</div>
@@ -44,7 +45,8 @@
 				    <th>Mã đơn hàng</th>
 				    <th>Thời gian đặt hàng</th>
 				    <th>Phương thức thanh toán</th>
-				    <th>Tổng đơn hàng</th>
+				    <th>Tổng tiền</th>
+				    <th>Số lượng sách</th>
 				    <th>Trạng thái</th>
 				  </tr>
 				</thead>
@@ -55,6 +57,7 @@
 					    <td>{{ order.orderTime|date:"d/m/Y H:i" }}</td>
 					    <td>{{ order.payment_method }}</td>
 					    <td>{{ order.total | floatformat | intcomma:False }}đ</td>
+					    <td>{{ order.book_count }}</td>
 					    <td>{{ order.get_status_display }}</td>
 				  	</tr>
 				  	{% endfor %}

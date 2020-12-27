@@ -97,7 +97,11 @@ class Order(models.Model):
 
 	@property
 	def payment_method(self):
-		return "Chuyển khoản"
+		payment = self.payment_set.first()
+		if payment:
+			return payment.get_method_display()
+		else:
+			return "Chuyển khoản"
 
 	def __str__(self):
 		return str(self.id) + " - " + str(self.customer)

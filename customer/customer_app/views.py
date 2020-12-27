@@ -154,11 +154,11 @@ def checkout(request):
 @allowed_users(allowed_roles=['customer'])
 def order(request):
 	customer = request.user.customer
-	order_list = Order.objects.filter(customer=customer, complete=True)
+	order_list = Order.objects.filter(customer=customer, complete=True).annotate(book_count=Sum('orderitem__quantity'))
 	order_filter = OrderFilter(request.GET, queryset=order_list)
 
 	order_list = order_filter.qs
-	order_list = order_list.order_by("-orderTime").prefetch_related("orderitem_set")
+	order_list = order_list.prefetch_related("orderitem_set")
 
 	paginator = Paginator(order_list, 10) # Show 10 authors per page.
 
