@@ -2,6 +2,7 @@ from faker import Faker
 from customer_app.models import *
 import random
 from random import randint
+from datetime import datetime
 
 faker = Faker()
 
@@ -112,11 +113,11 @@ imports = Import.objects.all()
 reviews = Review.objects.all()
 
 for item in imports:
-	item.importTime = faker.date_time_this_century()
+	item.importTime = faker.date_time_this_month()
 	item.save()
 
 for item in exports:
-	item.exportTime = faker.date_time_this_century()
+	item.exportTime = faker.date_time_this_month()
 	item.save()
 
 for item in reviews:
@@ -134,3 +135,98 @@ for item in exports:
 	staffs = Staff.objects.filter(storage=item.storage)
 	item.staff = random.choice(staffs)
 	item.save()
+
+statuses = ['Unpaid', 'Pending', 'Delivered', 'Cancel', 'Error']
+customers = Customer.objects.all()
+staffs = Staff.objects.all()
+for _ in range(100):
+	customer = random.choice(customers)
+	status = random.choice(statuses)
+	if status != 'Unpaid':
+		staff = random.choice(staffs)
+	else:
+		staff = None
+	Order.objects.create(customer=customer,
+		staff=staff,
+		orderTime=faker.date_time_this_month(after_now=True),
+		status = status,
+		shippingAddress=faker.address(),
+		complete=True)
+
+orders = Order.objects.exclude(status='Unpaid').filter(staff__isnull=True)
+for order in orders:
+	staff = random.choice(staffs)
+	order.staff = staff
+	order.save()
+
+options = ['buy', 'eBuy', 'eRent']
+orders = Order.objects.filter(id__gt=21)
+traditionals = Traditional.objects.all()
+electronics = Electronic.objects.all()
+books = Book.objects.all()
+for order in orders:
+	q = randint(2, 10)
+	book_rand = set(random.choices(books, k=q))
+	for book in book_rand:
+		n = randint(1, 5)
+		try:
+			elec = book.electronic
+			option = random.choice(options)
+			if option == 'eBuy':
+				n = 1
+		except:
+			option = 'buy'
+		
+		OrderItem.objects.create(book=book, order=order, quantity=n, option=option)
+
+traditionals = Traditional.objects.all()
+storages = Storage.objects.all()
+for storage in storages:
+	n = faker.random_int(40, 50)
+	book_rand = set(random.choices(traditionals, k=n))
+	staffs = Staff.objects.filter(storage=storage)
+	for book in book_rand:
+		q = faker.random_int(3, 20)
+		Import.objects.create(book=book, 
+			storage=storage, importTime=faker.date_time_this_month(), quantity=q, staff=random.choice(staffs))
+		item_list = Inventory.objects.filter(book=book, storage=storage)
+		if item_list:
+			item = item_list[0]
+			item.quantity += q
+			item.save()
+		else:
+			Inventory.objects.create(book=book, storage=storage, quantity=q)
+
+for storage in storages:
+	n = faker.random_int(5, 20)
+	book_rand = set(random.choices(traditionals, k=n))
+	staffs = Staff.objects.filter(storage=storage)
+	for book in book_rand:
+		q = faker.random_int(1, 10)
+		Export.objects.create(book=book, 
+			storage=storage, exportTime=faker.date_time_this_month(), quantity=q, staff=random.choice(staffs))
+
+payment_statuses = ['error', 'process', 'finish']
+orders = Order.objects.filter(id__gt=3).exclude(status='Unpaid').prefetch_related('orderitem_set')
+
+for order in orders:
+	status = random.choice(payment_statuses)
+	if status != 'finish':
+		reason = faker.text(100)
+	else:
+		reason = ""
+	Payment.objects.create(
+		customer=order.customer,
+		order=order,
+		method='credit',
+		amount=order.total,
+		status=status,
+		reason=reason
+	)
+
+payments = Payment.objects.filter(id__gt=2)
+for payment in payments:
+	status = payment.status[2:-2]
+	payment.status = status
+	payment.paymentTime = payment.order.orderTime
+	payment.save()

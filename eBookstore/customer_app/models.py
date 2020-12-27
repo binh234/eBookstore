@@ -43,6 +43,7 @@ class Staff(models.Model):
 	lastName = models.CharField(max_length=30)
 	email = models.EmailField(blank=True)
 	phone = models.CharField(max_length=20, blank=True)
+	address = models.CharField(max_length=120, blank=True)
 	avatar = models.ImageField(blank=True)
 
 	class Meta:
@@ -85,6 +86,10 @@ class Order(models.Model):
 	def shipping(self):
 		traditional_item = self.orderitem_set.filter(option='buy')
 		return traditional_item.exists()
+	
+	@property
+	def total(self):
+		return sum([item.subtotal for item in self.orderitem_set.all()])
 
 	def __str__(self):
 		return str(self.id) + " - " + str(self.customer)
@@ -275,6 +280,11 @@ class Payment(models.Model):
 		('credit', 'credit'),
 		('transfer', 'transfer')
 	]
+	PAYMENT_STATUS = [
+		('error', 'error'),
+		('process', 'process'),
+		('finish', 'finish')
+	]
 
 	customer = models.ForeignKey(Customer, on_delete=models.CASCADE, db_column='customerId')
 	order = models.ForeignKey(Order, on_delete=models.CASCADE, db_column='orderId')
@@ -283,6 +293,8 @@ class Payment(models.Model):
 	paymentTime = models.DateTimeField(auto_now_add=True)
 	method = models.CharField(max_length=12, choices=PAYMENT_METHOD, default='transfer')
 	amount = models.DecimalField(max_digits=10, decimal_places=2)
+	status = models.CharField(max_length=12, choices=PAYMENT_STATUS, default='finish')
+	reason = models.CharField(max_length=120, default="")
 
 	class Meta:
 		db_table = 'payment'
