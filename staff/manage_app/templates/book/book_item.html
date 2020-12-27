@@ -1,0 +1,16 @@
+{% load l10n %}
+{% load humanize %}
+{% for book in page_obj %}
+<tr>
+  <td>{{book.ISBN}}</td>
+  <td>{{book.name}}</td>
+  <td>{{book.year}}</td>
+  <td>{{book.price | floatformat | intcomma:False }} đ</td>
+  <td>{{book.publisher}}</td>
+  <td>{{book.author_list | truncatechars:20}}</td>
+  <td>{{book.description | truncatechars:25}}</td>
+  <td>
+    <i class="material-icons edit-im-export js-load-form" href="{% url 'book_update' book.ISBN %}">edit</i>
+  </td>
+</tr>
+{% endfor %}

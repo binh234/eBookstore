@@ -1,0 +1,16 @@
+{% load l10n %}
+{% load humanize %}
+{% for payment in error_payment_list %}
+<tr>
+  <td>{{ payment.id }}</td>
+  <td>{{ payment.customer }}</td>
+  <td>{{ payment.paymentTime | date:"d/m/Y H:i" }}</td>
+  <td>{{ payment.amount | floatformat | intcomma:False }} đ</td>
+  <td>{{ payment.get_method_display }}</td>
+  <td>{{ payment.reason }}</td>
+  <td>{{ payment.get_status_display }}</td>
+  <td><i class="material-icons edit-im-export js-load-form" href="{% url 'error_update' payment.id %}">edit</i></td>
+</tr>
+{% empty %}
+<p class="mt-2">Hiện tại không có giao dịch gặp sự cố</p>
+{% endfor %}

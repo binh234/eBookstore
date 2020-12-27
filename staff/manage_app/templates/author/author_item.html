@@ -1,0 +1,9 @@
+{% for author in page_obj %}
+<tr>
+<td>{{ author.id }}</td>
+<td>{{ author.name }}</td>
+<td>{{ author.email }}</td>
+<td>{% if author.book_count %}{{author.book_count}}{%else%}0{%endif%}</td>
+<td><i class="material-icons edit-im-export js-load-form" href="{% url 'author_update' author.id %}">edit</i></td>
+</tr>
+{% endfor %}

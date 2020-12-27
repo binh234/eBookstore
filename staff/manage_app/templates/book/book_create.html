@@ -1,0 +1,107 @@
+{% extends 'main.html' %}
+{% load static %}
+{% load l10n %}
+{% load humanize %}
+{% load tag %}
+
+  {% block title %}
+  Cập nhật thông tin sách
+  {% endblock %}
+
+  {% block navbar %}
+    <a class="navbar-brand" href="javascript:;">THÔNG TIN SÁCH</a>
+  {% endblock %}
+  {% block content %}
+    <div class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="card">
+              <div class="card-header card-header-success">
+                <h3 class="card-title d-inline-block">CẬP NHẬT THÔNG TIN SÁCH</h3>
+                <p class="card-category">Điền vào form bên dưới</p>
+              </div>
+              <div class="card-body">
+                <form method="POST" enctype="multipart/form-data">{% csrf_token %}
+                  <div class="row mt-2">
+                    <div class="col-md-5">
+                      <div class="form-group">
+                        <label class="bmd-label-floating">ISBN</label>
+                        {{ form.ISBN }}
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <label class="bmd-label-floating">Giá (đồng)</label>
+                        {{ form.price }}
+                      </div>
+                    </div>
+                    <div class="col-md-3">
+                      <div class="form-group">
+                        <label class="bmd-label-floating">Năm xuất bản</label>
+                        {{ form.year }}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row mt-2">
+                    <div class="col-md-12 mt-2">
+                      <div class="form-group">
+                        <label class="bmd-label-floating">Tên sách</label>
+                        {{ form.name }}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row mt-2">
+                    <div class="col-md-12 mt-2">
+                      <div class="form-group">
+                        <label class="bmd-label-floating">Mô tả</label>
+                        {{ form.description }}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row mt-2">
+                    <div class="col-md-12 mt-2">
+                      <div class="form-group">
+                        <label class="bmd-label-floating">Thể loại</label>
+                        {{ form.topics }}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row mt-2">
+                    <div class="col-md-12 mt-2">
+                      <div class="form-group">
+                        <label class="bmd-label-floating">Từ khóa</label>
+                        {{ form.keywords }}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row mt-2">
+                    <div class="col-md-12 mt-2">
+                      <div class="form-group">
+                        <label class="bmd-label-floating">Nhà xuất bản</label>
+                        {{ form.publisher }}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row mt-2">
+                    <div class="col-md-12 mt-2">
+                      <div class="form-group">
+                        <label class="bmd-label-floating">Tác giả</label>
+                        {{ form.authors }}
+                      </div>
+                    </div>
+                  </div>
+                  <button type="submit" class="btn btn-primary save-profile float-right">LƯU</button>
+                  <div class="clearfix"></div>
+                </form>
+              </div>
+            </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endblock %}
+
+  {% block script %}
+  {% endblock %}

@@ -1,0 +1,105 @@
+{% extends 'main.html' %}
+{% load static %}
+
+  {% block title %}
+  Quản lý kho hàng
+  {% endblock %}
+
+  {% block navbar %}
+    <a class="navbar-brand" href="javascript:;">QUẢN LÝ KHO HÀNG</a>
+  {% endblock %}
+
+  {% block content %}
+    <div class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header card-header-danger">
+                <h3 class="card-title">SÁCH ĐANG THIẾU TRONG KHO</h3>
+              </div>
+              <div class="card-body table-responsive">
+                <table class="table table-hover">
+                  <thead class="text-warning">
+                    <th>ISBN</th>
+                    <th>Tên sách</th>
+                    <th>Số lượng hiện có</th>
+                  </thead>
+                  <tbody>
+                    {% for item in lack_item_list %}
+                    <tr>
+                      <td>{{item.book.book.ISBN}}</td>
+                      <td>{{item.book.book.name}}</td>
+                      <td>{{item.quantity}} cuốn</td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header card-header-warning">
+                <h3 class="card-title">TOP XUẤT KHO TRONG THÁNG</h3>
+                <p class="card-category">
+                  <form class="navbar-form js-date-month" data-option="month" data-target="#top-month-table tbody" method="POST">{% csrf_token %}
+                    <div class="input" >
+                      <input name="date" type="month" class="form-control" value="{{cur_month}}" style="width: 200px; display: inline-block;">
+                      <input type="submit" class="btn btn-primary" value="OK">
+                    </div>
+                  </form>
+                </p>
+              </div>
+              <div class="card-body table-responsive">
+                <table class="table table-hover" id="top-month-table">
+                  <thead class="text-warning">
+                    <th>Xếp hạng</th>
+                    <th>ID</th>
+                    <th>Địa chỉ</th>
+                    <th>Số lượng</th>
+                  </thead>
+                  <tbody>
+                    {% for storage in top_export %}
+                    <tr>
+                      <td>{{ forloop.counter }}</td>
+                      <td>{{ storage.id }}</td>
+                      <td>{{ storage.location | truncatechars:20 }}</td>
+                      <td>{{ storage.export_num }}</td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header card-header-success">
+                <h3 class="card-title">SỐ LƯỢNG SÁCH TRONG KHO</h3>
+              </div>
+              <div class="card-body table-responsive">
+                <table class="table table-hover">
+                  <thead class="text-warning">
+                    <th>ISBN</th>
+                    <th>Tên sách</th>
+                    <th>Số lượng</th>
+                  </thead>
+                  <tbody>
+                    {% for item in item_list %}
+                    <tr>
+                      <td>{{ item.book.book.ISBN }}</td>
+                      <td>{{ item.book.book.name }}</td>
+                      <td>{{ item.quantity }}</td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endblock %}
+
+  {% block script %}
+  {% endblock %}

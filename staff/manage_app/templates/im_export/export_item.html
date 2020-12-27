@@ -1,0 +1,9 @@
+{% for item in export_obj %}
+<tr>
+<td>{{ item.book.book.ISBN }}</td>
+<td>{{ item.book.book.name }}</td>
+<td>{{ item.quantity }}</td>
+<td>{{ item.exportTime | date:"d/m/Y H:i" }}</td>
+<td><i class="material-icons edit-im-export js-load-form" href="{% url 'export_update' item.id %}">edit</i></td>
+</tr>
+{% endfor %}

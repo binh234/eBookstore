@@ -1,0 +1,75 @@
+{% extends 'main.html' %}
+{% load static %}
+
+  {% block title %}
+  Xuất nhập kho
+  {% endblock %}
+
+  {% block navbar %}
+    <a class="navbar-brand" href="javascript:;">XUẤT/ NHẬP KHO</a>
+  {% endblock %}
+
+  {% block content %}
+    <div class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header card-header-success">
+                <h3 class="card-title d-inline-block">NHẬP KHO</h3>
+                <img class="float-right add-import js-load-form" src = "{% static 'images/add.svg' %}" style="height: 32px;" href="{% url 'import_create' %}">
+              </div>
+              <div class="card-body table-responsive">
+                <table class="table table-hover" id="import-table">
+                  <thead class="text-warning">
+                    <th>ISBN</th>
+                    <th>Tên sách</th>
+                    <th>Số lượng</th>
+                    <th>Thời gian nhập</th>
+                    <th>Cập nhật</th>
+                  </thead>
+                  <tbody>
+                    {% include 'im_export/import_item.html' %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header card-header-warning">
+                <h3 class="card-title d-inline-block">XUẤT KHO</h3>
+                <img class="float-right add-export js-load-form" src="{% static 'images/add.svg' %}" style="height: 32px;" href="{% url 'export_create' %}">
+              </div>
+              <div class="card-body table-responsive">
+                <table class="table table-hover" id="export-table">
+                  <thead class="text-warning">
+                    <th>ISBN</th>
+                    <th>Tên sách</th>
+                    <th>Số lượng</th>
+                    <th>Thời gian xuất</th>
+                    <th>Cập nhật</th>
+                  </thead>
+                  <tbody>
+                    {% include 'im_export/export_item.html' %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Modal -->
+    <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          {% include 'im_export/import_form.html' %}
+        </div>
+      </div>
+    </div>
+  {% endblock %}
+
+  {% block script %}
+  {% endblock %}

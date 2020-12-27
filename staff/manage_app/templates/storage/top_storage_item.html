@@ -1,0 +1,10 @@
+{% for storage in top_export %}
+<tr>
+<td>{{ forloop.counter }}</td>
+<td>{{ storage.id }}</td>
+<td>{{ storage.location | truncatechars:20 }}</td>
+<td>{{ storage.export_num }}</td>
+</tr>
+{% empty %}
+<p class="mt-2">Không có kho nào xuất kho trong tháng này </p>
+{% endfor %}

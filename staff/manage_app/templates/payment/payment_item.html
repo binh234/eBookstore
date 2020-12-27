@@ -1,0 +1,12 @@
+{% load l10n %}
+{% load humanize %}
+{% for payment in card_payment_list %}
+<tr>
+<td>{{ payment.id }}</td>
+<td>{{ payment.customer }}</td>
+<td>{{ payment.paymentTime | date:"d/m/Y H:i" }}</td>
+<td>{{ payment.amount | floatformat | intcomma:False }} đ</td>
+</tr>
+{% empty %}
+<p class="mt-2">Không có giao dịch bằng thẻ nào được thực hiện trong ngày</p>
+{% endfor %}

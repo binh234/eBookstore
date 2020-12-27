@@ -1,0 +1,88 @@
+{% extends 'main.html' %}
+{% load static %}
+{% load l10n %}
+{% load humanize %}
+
+  {% block title %}
+  Giao dịch gặp sự cố
+  {% endblock %}
+
+  {% block navbar %}
+    <a class="navbar-brand" href="javascript:;">GIAO DỊCH GẶP SỰ CỐ</a>
+  {% endblock %}
+
+  {% block content %}
+    <div class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="card">
+              <div class="card-header card-header-danger">
+                <h3 class="card-title">SỰ CỐ GIAO DỊCH</h3>
+              </div>
+              <div class="card-body table-responsive">
+                <table class="table table-hover" id="table">
+                  <thead class="text-warning">
+                    <th>Mã giao dịch</th>
+                    <th>Khách hàng</th>
+                    <th>Thời gian</th>
+                    <th>Số tiền</th>
+                    <th>Phương thức thanh toán</th>
+                    <th>Nguyên nhân</th>
+                    <th>Tình trạng</th>
+                    <th>Cập nhật</th>
+                  </thead>
+                  <tbody>
+                    {% include 'error/error_item.html' %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Modal -->
+    <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Cập nhật thông tin</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="row">
+                <div class="col-md-6">
+                  <h5>Tình trạng</h5>
+                  <select class="selectpicker dropdown-fast form-control date-month error-state">
+                    <option>Chưa giải quyết</option>
+                    <option>Đang giải quyết</option>
+                    <option>Đã giải quyết</option>
+                  </select>
+                </div>
+              </div>
+              <br><br>
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label>Nguyên nhân</label>
+                    <textarea class="form-control" rows="3">Lỗi không xác định</textarea>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+            <button type="button" class="btn btn-primary save-edit" data-dismiss="modal">Lưu cập nhật</button>
+          </div>
+      </div>
+    </div>
+  {% endblock %}
+
+  {% block script %}
+  {% endblock %}

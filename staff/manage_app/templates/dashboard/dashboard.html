@@ -1,0 +1,203 @@
+{% extends 'main.html' %}
+{% load static %}
+{% load l10n %}
+{% load humanize %}
+
+  {% block title %}
+  Xem thống kê
+  {% endblock %}
+
+  {% block dashboard_active %}
+  active
+  {% endblock %}
+
+  
+    {% block navbar %}
+      <a class="navbar-brand" href="javascript:;">XEM THỐNG KÊ THEO</a>
+        <select class="selectpicker dropdown-fast form-control date-month"> 
+          <option {%if option %} selected {% endif %}>Ngày</option> 
+          <option {%if not option %} selected {% endif %}>Tháng</option>
+        </select>
+      <form class="form-inline" method="GET" id="dashboard-date-form">
+        <input class="input-date-month" type="{%if option %}date{% else %}month{% endif %}" name="date" value="{{select_date}}">
+      </form>
+    {% endblock %}
+
+    {% block content %}      
+      <div class="content">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-lg-3 col-md-6 col-sm-6">
+              <div class="card card-stats">
+                <div class="card-header card-header-warning card-header-icon">
+                  <div class="card-icon">
+                    <i class="material-icons">content_copy</i>
+                  </div>
+                  <p class="card-category">Tổng số sách - Mua</p>
+                  <h3 class="card-title"> {{ total_book }}
+                    <small>sách</small>
+                  </h3>
+                </div>
+                <div class="card-footer">
+                  <div class="stats">
+                    <i class="material-icons">local_offer</i> Tất cả sách được mua trong {{category}}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6">
+              <div class="card card-stats">
+                <div class="card-header card-header-success card-header-icon">
+                  <div class="card-icon">
+                    <i class="material-icons">menu_book</i>
+                  </div>
+                  <p class="card-category">Sách truyền thống - Mua</p>
+                  <h3 class="card-title"> {{ total_buy }}
+                    <small>sách</small>
+                  </h3>
+                </div>
+                <div class="card-footer">
+                  <div class="stats">
+                    <i class="material-icons">local_offer</i> Tất cả sách truyền thống trong {{category}}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6">
+              <div class="card card-stats">
+                <div class="card-header card-header-danger card-header-icon">
+                  <div class="card-icon">
+                    <i class="material-icons">bookmark</i>
+                  </div>
+                  <p class="card-category">Sách điện tử - Mua</p>
+                  <h3 class="card-title"> {{ total_eBuy }}
+                    <small>sách</small>
+                  </h3>
+                </div>
+                <div class="card-footer">
+                  <div class="stats">
+                    <i class="material-icons">local_offer</i> Tất cả sách điện tử trong {{category}}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6">
+              <div class="card card-stats">
+                <div class="card-header card-header-info card-header-icon">
+                  <div class="card-icon">
+                    <i class="material-icons">bookmark_border</i>
+                  </div>
+                  <p class="card-category">Sách điện tử - Thuê</p>
+                  <h3 class="card-title"> {{ total_eRent }}
+                    <small>sách</small>
+                  </h3>
+                </div>
+                <div class="card-footer">
+                  <div class="stats">
+                    <i class="material-icons">local_offer</i> Tất cả sách điện tử trong {{category}}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="card card-chart">
+                <div class="card-header card-header-success">
+                  <div id = "chart-sum-book"></div>
+                </div>
+                <div class="card-body">
+                  <h4 class="card-title">Tình hình kinh doanh trong tuần</h4>
+                  <p class="card-category">
+                    <span class="text-success"><i class="fa fa-long-arrow-up"></i> 55% </span>Tổng số sách mua/thuê so với tuần trước</p>
+                </div>
+                <div class="card-footer">
+                  <div class="stats">
+                    <i class="material-icons">access_time</i> Cập nhật 5 phút trước
+                  </div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-header card-header-primary">
+                  <h4 class="card-title">TOP sách bán chạy trong {{category}}</h4>
+                </div>
+                <div class="card-body table-responsive">
+                  <table class="table table-hover">
+                    <thead class="text-warning">
+                      <th>Xếp hạng</th>
+                      <th>Tên sách</th>
+                      <th>Giá</th>
+                      <th>Số lượng</th>
+                    </thead>
+                    <tbody>
+                      {% for item in top_item_list %}
+                      <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ item.book__name }}</td>
+                        <td>{{ item.book__price | floatformat | intcomma:False }} đ</td>
+                        <td>{{ item.book_count }}</td>
+                      </tr>
+                      {% empty %}
+                      <p class="mt-2">Chưa có sách nào được bán</p>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="card">
+                <div class="card-header card-header-warning">
+                  <h4 class="card-title">Các sách được mua</h4>
+                </div>
+                <div class="card-body table-responsive">
+                  <table class="table table-hover">
+                    <thead class="text-warning">
+                      <th>STT</th>
+                      <th>Tên sách</th>
+                      <th>Giá</th>
+                      <th>Số lượng</th>
+                    </thead>
+                    <tbody>
+                      {% for item in item_list %}
+                      <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ item.book__name }}</td>
+                        <td>{{ item.book__price | floatformat | intcomma:False }} đ</td>
+                        <td>{{ item.book_count }}</td>
+                      </tr>
+                      {% empty %}
+                      <p class="mt-2">Chưa có sách nào được bán</p>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  {% endblock %}
+
+  {% block script %}
+  <script>
+    $(document).ready(function() {
+      // Javascript method's body can be found in assets/js/demos.js
+      md.initDashboardPageCharts();
+
+    });
+  </script>
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $(".date-month").on("change", function() {
+        $("input.input-date-month").attr("name", "date");
+        $("input.input-date-month").on("blur", function() {
+          $(this).closest('form').submit();
+        });
+      });
+      $("input.input-date-month").on("blur", function() {
+        $(this).closest('form').submit();
+      });
+    });
+  </script>
+  {% endblock %}

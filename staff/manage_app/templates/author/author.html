@@ -1,0 +1,137 @@
+{% extends 'main.html' %}
+{% load static %}
+{% load tag %}
+
+  {% block title %}
+  Tác giả
+  {% endblock %}
+
+  {% block navbar %}
+    <a class="navbar-brand" href="javascript:;">TÁC GIẢ</a>
+  {% endblock %}
+  {% block content %}
+    <div class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header card-header-success">
+                <h3 class="card-title">TOP TÁC GIẢ TRONG NGÀY</h3>
+                <p class="card-category">
+                  <form class="navbar-form js-date-month" data-option="date" data-target="#top-day-table tbody" method="POST">{% csrf_token %}
+                    <div class="input">
+                      <input name="date" type="date" class="form-control" value="{{cur_date}}" style="width: 200px; display: inline-block;">
+                      <input type="submit" class="btn btn-primary" value="OK">
+                    </div>
+                  </form>
+                </p>
+              </div>
+              <div class="card-body table-responsive">
+                <table class="table table-hover" id="top-day-table">
+                  <thead class="text-warning">
+                    <th>Xếp hạng</th>
+                    <th>Tên</th>
+                    <th>Email</th>
+                    <th>Số sách</th>
+                  </thead>
+                  <tbody>
+                    {% for author in top_day %}
+                    <tr>
+                      <td>{{ forloop.counter }}</td>
+                      <td>{{ author.book__authors__name }}</td>
+                      <td>{{ author.book__authors__email }}</td>
+                      <td>{{ author.book_count }}</td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header card-header-warning">
+                <h3 class="card-title">TOP TÁC GIẢ TRONG THÁNG</h3>
+                <p class="card-category">
+                  <form class="navbar-form js-date-month" data-option="month" data-target="#top-month-table tbody" method="POST">{% csrf_token %}
+                    <div class="input" >
+                      <input name="date" type="month" class="form-control" value="{{cur_month}}" style="width: 200px; display: inline-block;">
+                      <input type="submit" class="btn btn-primary" value="OK">
+                    </div>
+                  </form>
+                </p>
+              </div>
+              <div class="card-body table-responsive">
+                <table class="table table-hover" id="top-month-table">
+                  <thead class="text-warning">
+                    <th>Xếp hạng</th>
+                    <th>Tên</th>
+                    <th>Email</th>
+                    <th>Số sách</th>
+                  </thead>
+                  <tbody>
+                    {% for author in top_month %}
+                    <tr>
+                      <td>{{ forloop.counter }}</td>
+                      <td>{{ author.book__authors__name }}</td>
+                      <td>{{ author.book__authors__email }}</td>
+                      <td>{{ author.book_count }}</td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="card">
+              <div class="card-header card-header-warning">
+                <h3 class="card-title d-inline-block">DANH SÁCH TÁC GIẢ</h3>
+                <img class="float-right js-load-form" src = "{% static 'images/add.svg' %}" style="height: 32px;" href="{% url 'author_create' %}">
+              </div>
+              <div class="card-body table-responsive">
+                <table class="table table-hover" id="table">
+                  <thead class="text-warning">
+                    <th>ID</th>
+                    <th>Tên</th>
+                    <th>Email</th>
+                    <th>Số lượng sách đã bán/ cho thuê</th>
+                    <th>Cập nhật</th>
+                  </thead>
+                  <tbody>
+                    {% include 'author/author_item.html' %}
+                  </tbody>
+                </table>
+                {% if page_obj.paginator.num_pages > 1 %}
+                <ul class="pagination float-right mt-3 mb-3">
+                  {% if page_obj.has_previous %}
+                    <li class="page-item"><a class="page-link" href="?{% url_replace page=1 %}">&laquo;</a></li>
+                    <li class="page-item"><a class="page-link" href="?{% url_replace page=page_obj.previous_page_number%}">{{ page_obj.previous_page_number }}</a></li>
+                  {% endif %}
+
+                  <li class="page-item page-link">{{ page_obj.number }}</li>
+
+                  {% if page_obj.has_next %}
+                      <li class="page-item"><a class="page-link" href="?{% url_replace page=page_obj.next_page_number%}">{{ page_obj.next_page_number }}</a></li>
+                      <li class="page-item"><a class="page-link" href="?{% url_replace page=page_obj.paginator.num_pages %}">&raquo;</a></li>
+                  {% endif %}
+                </ul>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+        </div>
+      </div>
+    </div>
+  {% endblock %}
+
+  {% block script %}
+  {% endblock %}

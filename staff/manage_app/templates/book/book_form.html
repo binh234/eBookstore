@@ -1,0 +1,83 @@
+<form class="js-save-form" method="POST" action="{% if form.instance.pk %}{% url 'book_update' form.instance.pk %}{%else%}{% url 'book_create' %} {%endif%}" data-target="#book-table tbody"> {% csrf_token %}
+  <div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">Nhập sách</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body" style="overflow-y: auto">
+    <div class="row">
+      <div class="col-md-5">
+        <div class="form-group" disabled>
+          <label class="bmd-label-floating">ISBN</label>
+          {{ form.ISBN }}
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group" disabled>
+          <label class="bmd-label-floating">Giá (đồng)</label>
+          {{ form.price }}
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="form-group" disabled>
+          <label class="bmd-label-floating">Năm xuất bản</label>
+          {{ form.year }}
+        </div>
+      </div>
+    </div>
+    <div class="row mt-2">
+      <div class="col-md-12 mt-2">
+        <div class="form-group">
+          <label class="bmd-label-floating">Tên sách</label>
+          {{ form.name }}
+        </div>
+      </div>
+    </div>
+    <div class="row mt-2">
+      <div class="col-md-12 mt-2">
+        <div class="form-group">
+          <label class="bmd-label-floating">Mô tả</label>
+          {{ form.description }}
+        </div>
+      </div>
+    </div>
+    <div class="row mt-2">
+      <div class="col-md-12 mt-2">
+        <div class="form-group">
+          <label class="bmd-label-floating">Nhà xuất bản</label>
+          {{ form.publisher }}
+        </div>
+      </div>
+    </div>
+    <div class="row mt-2">
+      <div class="col-md-12 mt-2">
+        <div class="form-group">
+          <label class="bmd-label-floating">Tác giả</label>
+          {{ form.authors }}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+    <button type="submit" class="btn btn-primary save-edit">Lưu</button>
+  </div>
+</form>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/js/select2.full.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('.simple-select2').select2({
+            theme: 'classic',
+            placeholder: "Chọn",
+            width: '100%'
+        });
+
+        $('.simple-select2-sm').select2({
+            theme: 'bootstrap4',
+            containerCssClass: ':all:',
+            placeholder: "Select an option",
+            allowClear: true
+        });
+    });
+</script>

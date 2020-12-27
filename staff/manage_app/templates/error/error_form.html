@@ -1,0 +1,45 @@
+<form class="js-save-form" method="POST" action="{% url 'error_update' form.instance.pk %}" data-target="#table tbody"> {% csrf_token %}
+  <div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">Cập nhật giao dịch</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="form-group" disabled>
+          <label class="bmd-label-floating">Tình trạng</label>
+          {{ form.status }}
+        </div>
+      </div>
+      <div class="col-md-12 mt-2">
+        <div class="form-group">
+          <label class="bmd-label-floating">Nguyên nhân</label>
+          {{ form.reason }}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+    <button type="submit" class="btn btn-primary save-edit">Lưu</button>
+  </div>
+</form>
+<script>
+    $(document).ready(function() {
+        $('.simple-select2').select2({
+            theme: 'bootstrap4',
+            placeholder: "Select an option",
+            allowClear: true,
+            width: '100%'
+        });
+
+        $('.simple-select2-sm').select2({
+            theme: 'bootstrap4',
+            containerCssClass: ':all:',
+            placeholder: "Select an option",
+            allowClear: true
+        });
+    });
+</script>

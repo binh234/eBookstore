@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+
+<head>
+  <title>
+    Đăng nhập
+  </title>
+{% include 'header.html' %}
+  <link href="{% static 'css/login.css' %}" rel="stylesheet" />
+
+</head>
+
+<body class="">
+    <div class="content">
+        <div class="container-fluid">
+            <div class="card">
+                <div class="card-header card-header-primary">
+                  <h4 class="card-title">ĐĂNG NHẬP</h4>
+                  <p class="card-category">*Sử dụng tài khoản đã được quản lý cấp</p>
+                </div>
+                <div class="card-body">
+                  <form method="POST"> {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-2"></div>
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label class="bmd-label-floating">Tên đăng nhập</label>
+                                <input type="text" class="form-control" name="username">
+                            </div>
+                        </div>
+                        <div class="col-md-2"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2"></div>
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label class="bmd-label-floating">Mật khẩu</label>
+                                <input type="password" class="form-control" name="password">
+                            </div>
+                        </div>
+                        <div class="col-md-2"></div>
+                    </div>
+                    <button type="submit" class="btn btn-primary float-right">Đăng nhập</button>
+                    <div class="clearfix"></div>
+                  </form>
+                </div>
+              </div>
+        </div>
+      </div>
+      <footer class="footer">
+        <div class="container-fluid">
+          <div class="copyright float-right">
+            &copy;
+            <script>
+              document.write(new Date().getFullYear())
+            </script>, made with <i class="material-icons">favorite</i> by
+            <a href="#">Team 3</a>.
+          </div>
+        </div>
+      </footer>
+    </div>
+  </div>
+  {% include 'script.html' %}
+</body>
+
+</html>

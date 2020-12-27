@@ -1,0 +1,10 @@
+{% for author in top_author %}
+<tr>
+<td>{{ forloop.counter }}</td>
+<td>{{ author.book__authors__name }}</td>
+<td>{{ author.book__authors__email }}</td>
+<td>{{ author.book_count }}</td>
+</tr>
+{% empty %}
+<p class="mt-2">Chưa có sách nào được mua trong khoảng thời gian này </p>
+{% endfor %}

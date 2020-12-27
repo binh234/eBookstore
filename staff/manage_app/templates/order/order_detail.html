@@ -1,0 +1,111 @@
+{% extends 'main.html' %}
+{% load static %}
+{% load l10n %}
+{% load humanize %}
+{% load tag %}
+
+  {% block title %}
+  Chi tiết đơn hàng
+  {% endblock %}
+
+  {% block navbar %}
+    <a class="navbar-brand" href="javascript:;">THÔNG TIN ĐƠN HÀNG</a>
+  {% endblock %}
+
+  {% block content %}
+    <div class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="card">
+              <div class="card-header card-header-danger">
+                <h3 class="card-title">THÔNG TIN ĐƠN HÀNG</h3>
+              </div>
+              <div class="card-body">
+                <div class="row justify-content-right align-items-right">
+                  <div class="col-3 font-weight-bold text-right">Mã đơn hàng:</div>
+                  <div class="col-9">{{order.id}}</div>
+                </div>
+                <div class="row justify-content-right align-items-right">
+                  <div class="col-3 font-weight-bold text-right">Khách hàng:</div>
+                  <div class="col-9">{{order.customer}}</div>
+                </div>
+                <div class="row justify-content-right align-items-right">
+                  <div class="col-3 font-weight-bold text-right">Thời gian đặt hàng:</div>
+                  <div class="col-9">{{order.orderTime | date:"d/m/Y H:i" }}</div>
+                </div>
+                <div class="row justify-content-right align-items-right">
+                  <div class="col-3 font-weight-bold text-right">Tổng tiền:</div>
+                  <div class="col-9">{{ order.total | floatformat | intcomma:False }} đ</div>
+                </div>
+                <div class="row justify-content-right align-items-right">
+                  <div class="col-3 font-weight-bold text-right">Phương thức thanh toán:</div>
+                  <div class="col-9">{{order.payment_method}}</div>
+                </div>
+                <div class="row justify-content-right align-items-right">
+                  <div class="col-3 font-weight-bold text-right">Tình trạng:</div>
+                  <div class="col-9">{{order.get_status_display}}</div>
+                </div>
+                <div class="row justify-content-right align-items-right">
+                  <div class="col-3 font-weight-bold text-right">Địa chỉ giao hàng:</div>
+                  <div class="col-9">{{order.shippingAddress}}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+         <div class="row">
+          <div class="col-md-12">
+            <div class="card">
+              <div class="card-header card-header-danger">
+                <h3 class="card-title">CHI TIẾT ĐƠN HÀNG</h3>
+              </div>
+              <div class="card-body table-responsive">
+                <table class="table table-hover">
+                  <thead class="text-warning">
+                    <th>ISBN</th>
+                    <th>Tên sách</th>
+                    <th>Loại hàng</th>
+                    <th>Giá tiền</th>
+                    <th>Số lượng</th>
+                    <th>Tổng tạm tính</th>
+                  </thead>
+                  <tbody>
+                    {% for item in item_list %}
+                    <tr>
+                      <td>{{item.book.ISBN}}</td>
+                      <td>{{item.book.name}}</td>
+                      <td>{{item.get_option_display}}</td>
+                      <td>{{item.book.price | floatformat | intcomma:False }} đ</td>
+                      <td>{{item.quantity}}</td>
+                      <td>{{item.subtotal| floatformat | intcomma:False }} đ</td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+                <div class="row">
+                  <div class = "col-4">
+                    <a class="btn btn-success float-left" href="{% url 'order' %}">Quay lại</a>
+                  </div>
+
+                  <div class = "col-4 d-flex align-items-center justify-content-center">
+                    {% if order.can_cancel %}
+                    <a class="btn btn-danger" href="">Huỷ đơn</a>
+                    {% endif %}
+                  </div>
+                  <div class = "col-4">
+                    {% if order.can_export %}
+                    <a class="btn btn-primary float-right" href="">Xuất kho</a>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endblock %}
+
+  {% block script %}
+  {% endblock %}

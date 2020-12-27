@@ -1,0 +1,84 @@
+{% extends 'main.html' %}
+{% load static %}
+{% load l10n %}
+{% load humanize %}
+{% load tag %}
+
+  {% block title %}
+  Quản lý sách
+  {% endblock %}
+
+  {% block navbar %}
+    <a class="navbar-brand" href="javascript:;">QUẢN LÝ SÁCH</a>
+  {% endblock %}
+  {% block content %}
+    <div class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="card">
+              <div class="card-header card-header-success">
+                <h3 class="card-title d-inline-block">DANH SÁCH SÁCH</h3>
+                <a href="{% url 'book_create' %}"><img class="float-right" src = "{% static 'images/add.svg' %}" style="height: 32px;"></a>
+              </div>
+              <div class="card-body table-responsive">
+                <table class="table table-hover" id="book-table">
+                  <thead class="text-warning">
+                    <th>ISBN</th>
+                    <th>Tên sách</th>
+                    <th>Năm xuất bản</th>
+                    <th>Giá bán</th>
+                    <th>Nhà xuất bản</th>
+                    <th>Tác giả</th>
+                    <th>Mô tả</th>
+                  </thead>
+                  <tbody>
+                    {% for book in page_obj %}
+                    <tr>
+                      <td>{{book.ISBN}}</td>
+                      <td>{{book.name}}</td>
+                      <td>{{book.year}}</td>
+                      <td>{{book.price | floatformat | intcomma:False }} đ</td>
+                      <td>{{book.publisher}}</td>
+                      <td>{{book.author_list | truncatechars:20}}</td>
+                      <td>{{book.description | truncatechars:25}}</td>
+                      <td>
+                        <a class="material-icons edit-im-export" href="{% url 'book_update' book.ISBN %}" style="color: #333">edit</a>
+                      </td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+                {% if page_obj.paginator.num_pages > 1 %}
+                <ul class="pagination float-right mt-3 mb-3">
+                  {% if page_obj.has_previous %}
+                    <li class="page-item"><a class="page-link" href="?{% url_replace page=1 %}">&laquo;</a></li>
+                    <li class="page-item"><a class="page-link" href="?{% url_replace page=page_obj.previous_page_number%}">{{ page_obj.previous_page_number }}</a></li>
+                  {% endif %}
+
+                  <li class="page-item page-link">{{ page_obj.number }}</li>
+
+                  {% if page_obj.has_next %}
+                      <li class="page-item"><a class="page-link" href="?{% url_replace page=page_obj.next_page_number%}">{{ page_obj.next_page_number }}</a></li>
+                      <li class="page-item"><a class="page-link" href="?{% url_replace page=page_obj.paginator.num_pages %}">&raquo;</a></li>
+                  {% endif %}
+                </ul>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Modal -->
+    <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-scrollable" style="display: flex;">
+        <div class="modal-content">
+        </div>
+      </div>
+    </div>
+  {% endblock %}
+
+  {% block script %}
+  {% endblock %}

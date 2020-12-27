@@ -67,11 +67,11 @@ class Staff(models.Model):
 
 class Order(models.Model):
 	ORDER_STATUS = [
-		('Unpaid', 'Unpaid'),
-		('Pending', 'Pending'),
-		('Delivered', 'Delivered'),
-		('Cancel', 'Cancel'),
-		('Error', 'Error')
+		('Unpaid', 'Chưa thanh toán'),
+		('Pending', 'Đang xử lý'),
+		('Delivered', 'Đã xuất kho'),
+		('Cancel', 'Đã hủy'),
+		('Error', 'Gặp sự cố')
 	]
 
 	customer = models.ForeignKey(Customer, on_delete=models.CASCADE, db_column='customerId')
@@ -90,6 +90,26 @@ class Order(models.Model):
 	def shipping(self):
 		traditional_item = self.orderitem_set.filter(option='buy')
 		return traditional_item.exists()
+
+	@property
+	def can_export(self):
+		return self.status == "Pending" 
+
+	@property
+	def can_cancel(self):
+		return self.status in ["Unpaid", "Pending"]
+
+	@property
+	def total(self):
+		return sum([item.subtotal for item in self.orderitem_set.all()])
+
+	@property
+	def payment_method(self):
+		payment = self.payment_set.first()
+		if payment:
+			return payment.get_method_display()
+		else:
+			return "Chuyển khoản"
 
 	def __str__(self):
 		return str(self.id) + " - " + str(self.customer)
@@ -197,7 +217,7 @@ class Book(models.Model):
 
 	@property
 	def author_list(self):
-		author_name_list = self.authors.values_list('name', flat=True)
+		author_name_list = [author.name for author in self.authors.all()]
 		return ", ".join(author_name_list)
 
 	@property
@@ -217,6 +237,9 @@ class Traditional(models.Model):
 	class Meta:
 		managed = False
 		db_table = 'traditional'
+
+	def __str__(self):
+		return str(self.book)
 
 class Electronic(models.Model):
 	book = models.OneToOneField(Book, on_delete=models.CASCADE, db_column='ISBN', primary_key=True)
@@ -285,8 +308,13 @@ class Card(models.Model):
 
 class Payment(models.Model):
 	PAYMENT_METHOD = [
-		('credit', 'credit'),
-		('transfer', 'transfer')
+		('credit', 'Bằng thẻ'),
+		('transfer', 'Chuyển khoản')
+	]
+	PAYMENT_STATUS = [
+		('error', 'Gặp sự cố'),
+		('process', 'Đang giải quyết'),
+		('finish', 'Hoàn thành')
 	]
 
 	customer = models.ForeignKey(Customer, on_delete=models.CASCADE, db_column='customerId')
@@ -296,6 +324,8 @@ class Payment(models.Model):
 	paymentTime = models.DateTimeField(auto_now_add=True)
 	method = models.CharField(max_length=12, choices=PAYMENT_METHOD, default='transfer')
 	amount = models.DecimalField(max_digits=10, decimal_places=2)
+	status = models.CharField(max_length=12, choices=PAYMENT_STATUS, default='finish')
+	reason = models.CharField(max_length=120, default="")
 
 	class Meta:
 		managed = False

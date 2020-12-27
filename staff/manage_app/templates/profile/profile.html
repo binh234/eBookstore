@@ -1,0 +1,92 @@
+{% extends 'main.html' %}
+{% load static %}
+
+  {% block title %}
+  Thông tin cá nhân
+  {% endblock %}
+
+  {% block navbar %}
+    <a class="navbar-brand" href="javascript:;">THÔNG TIN CÁ NHÂN</a>
+  {% endblock %}
+          
+  {% block content %}
+    <div class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-8">
+            <div class="card">
+              <div class="card-header card-header-primary">
+                <h4 class="card-title">CẬP NHẬT THÔNG TIN CÁ NHÂN</h4>
+                <p class="card-category">Điền vào form bên dưới</p>
+              </div>
+              <div class="card-body">
+                <form method="POST" enctype="multipart/form-data">{% csrf_token %}
+                  <div class="row mt-2">
+                    <div class="col-md-3">
+                      <div class="form-group">
+                        <label class="bmd-label-floating">Họ</label>
+                        {{ form.firstName }}
+                      </div>
+                    </div>
+                    <div class="col-md-2">
+                      <div class="form-group">
+                        <label class="bmd-label-floating">Tên</label>
+                        {{ form.lastName }}
+                      </div>
+                    </div>
+                    <div class="col-md-3">
+                      <div class="form-group">
+                        <label class="bmd-label-floating">Số điện thoại</label>
+                        {{ form.phone }}
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <label class="bmd-label-floating">Địa chỉ email</label>
+                        {{ form.email }}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row mt-2">
+                    <div class="col-md-12">
+                      <div class="form-group">
+                        <label class="bmd-label-floating">Địa chỉ nơi sống</label>
+                        {{ form.address }}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row mt-2">
+                    <div class="col-md-12">
+                      <div class="form-group">
+                        <label class="bmd-label-floating">Ảnh đại diện</label>
+                      </div>
+                    </div>
+                  </div>
+                  {{ form.avatar }}
+                  <br>
+                  <button type="submit" class="btn btn-primary save-profile float-right">CẬP NHẬT</button>
+                  <div class="clearfix"></div>
+                </form>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card card-profile">
+              <div class="card-avatar">
+                <a href="javascript:;">
+                  <img class="img" src="{% static 'images/profile.jpg' %}" />
+                </a>
+              </div>
+              <div class="card-body">
+                <h6 class="card-category text-gray">NHÂN VIÊN</h6>
+                <h4 class="card-title">{{ staff.name }}</h4>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endblock %}
+
+  {% block script %}
+  {% endblock %}

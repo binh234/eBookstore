@@ -1,0 +1,87 @@
+{% extends 'main.html' %}
+{% load static %}
+{% load l10n %}
+{% load humanize %}
+
+  {% block title %}
+  Quản lý thanh toán
+  {% endblock %}
+
+  {% block navbar %}
+    <a class="navbar-brand" href="javascript:;">QUẢN LÝ THANH TOÁN</a>
+  {% endblock %}
+
+  {% block content %}
+    <div class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-5">
+            <div class="card">
+              <div class="card-header card-header-success">
+                <h3 class="card-title">GIAO DỊCH THANH TOÁN BẰNG THẺ</h3>
+                <p class="card-category">
+                  <form class="navbar-form js-date-month" data-option="date" data-target="#card-table tbody" method="POST">{% csrf_token %}
+                    <div class="input">
+                      <input name="date" type="date" class="form-control" value="{{cur_date}}" style="width: 200px; display: inline-block;">
+                      <input type="submit" class="btn btn-primary" value="OK">
+                    </div>
+                  </form>
+                </p>
+              </div>
+              <div class="card-body table-responsive">
+                <table class="table table-hover" id="card-table">
+                  <thead class="text-warning">
+                    <th>Mã giao dịch</th>
+                    <th>Mã khách hàng</th>
+                    <th>Thời gian</th>
+                    <th>Số tiền</th>
+                  </thead>
+                  <tbody>
+                    {% include 'payment/payment_item.html' %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-7">
+            <div class="card">
+              <div class="card-header card-header-danger">
+                <h3 class="card-title">THANH TOÁN BẰNG THẺ GẶP SỰ CỐ</h3>
+              </div>
+              <div class="card-body table-responsive">
+                {% if error_payment_list.count > 0 %}
+                <table class="table table-hover">
+                  <thead class="text-warning">
+                    <th>Mã giao dịch</th>
+                    <th>Khách hàng</th>
+                    <th>Thời gian</th>
+                    <th>Số tiền</th>
+                    <th>Nguyên nhân</th>
+                    <th>Tình trạng</th>
+                  </thead>
+                  <tbody>
+                    {% for payment in error_payment_list %}
+                    <tr>
+                      <td>{{ payment.id }}</td>
+                      <td>{{ payment.customer }}</td>
+                      <td>{{ payment.paymentTime | date:"d/m/Y H:i" }}</td>
+                      <td>{{ payment.amount | floatformat | intcomma:False }} đ</td>
+                      <td>Chưa rõ</td>
+                      <td>Chưa giải quyết</td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+                {% else %}
+                <p class="mt-2">Hiện tại không có giao dịch gặp sự cố</p>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endblock %}
+
+  {% block script %}
+  {% endblock %}
