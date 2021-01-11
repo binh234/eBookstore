@@ -12,7 +12,6 @@ import time
 
 class MultiValueCharFilter(filters.BaseCSVFilter, filters.CharFilter):
     def filter(self, qs, value):
-        start = time.clock()
         values = value or []
         if not values:
             return qs
@@ -31,8 +30,6 @@ class MultiValueCharFilter(filters.BaseCSVFilter, filters.CharFilter):
             #     queryset = queryset | self.get_method(qs)(**{lookup: value})
             query |= Q(**{lookup: value})
 
-        stop = time.clock()
-        print("time:", stop-start)
         return self.get_method(qs)(query)
 
 class BooleanForeignFilter(filters.BooleanFilter):
@@ -126,7 +123,7 @@ class AuthorFilter(FilterSet):
         return queryset.filter(**{field_name: value}).distinct()
 
 class OrderItemFilter(FilterSet):
-    order_date = DateFromToRangeFilter(field_name='order__orderTime', label="Ngày mua")
+    order_date = DateFromToRangeFilter(field_name='order__orderTime', label="Ngày mua", widget=RangeWidget(attrs={'type': 'date'}))
 
     class Meta:
         model = OrderItem
@@ -141,7 +138,7 @@ class OrderFilter(FilterSet):
         ('-book_count', 'Số lượng sách')
     )
 
-    order_date = DateFromToRangeFilter(field_name='orderTime', label="Ngày đặt hàng")
+    order_date = DateFromToRangeFilter(field_name='orderTime', label="Ngày đặt hàng", widget=RangeWidget(attrs={'type': 'date'}))
     status = MultipleChoiceFilter(field_name='status', 
         choices=Order.ORDER_STATUS, 
         label='Trạng thái', 
@@ -163,4 +160,3 @@ class OrderFilter(FilterSet):
             subquery = OrderItem.objects.filter(~Q(option='buy')).values_list("order_id", flat=True)
 
         return queryset.filter(**{name: 'buy'}, id__in=subquery).distinct()
-            

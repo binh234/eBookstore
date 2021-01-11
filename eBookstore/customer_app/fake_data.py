@@ -12,7 +12,7 @@ topics = ['Chính trị', 'Văn học', 'Tiểu thuyết', 'Truyện tranh', 'Th
 ]
 publishers = Publisher.objects.all()
 
-for i in range(50):
+for i in range(18000):
 	book = Book(
 		ISBN = faker.isbn13(separator=''),
 		name = faker.sentence(),
@@ -56,6 +56,7 @@ for i in range(40):
 		firstName = faker.first_name(),
 		lastName = faker.last_name(),
 		phone = '0' +str(faker.random_int(902387328, 999999999)),
+		address = faker.address(),
 		avatar=None
 	)
 
@@ -136,10 +137,10 @@ for item in exports:
 	item.staff = random.choice(staffs)
 	item.save()
 
-statuses = ['Unpaid', 'Pending', 'Delivered', 'Cancel', 'Error']
+statuses = ['Pending']
 customers = Customer.objects.all()
 staffs = Staff.objects.all()
-for _ in range(100):
+for _ in range(50):
 	customer = random.choice(customers)
 	status = random.choice(statuses)
 	if status != 'Unpaid':
@@ -153,14 +154,14 @@ for _ in range(100):
 		shippingAddress=faker.address(),
 		complete=True)
 
-orders = Order.objects.exclude(status='Unpaid').filter(staff__isnull=True)
+orders = Order.objects.filter(status='Pending').filter(staff__isnull=True)
 for order in orders:
 	staff = random.choice(staffs)
 	order.staff = staff
 	order.save()
 
 options = ['buy', 'eBuy', 'eRent']
-orders = Order.objects.filter(id__gt=21)
+orders = Order.objects.filter(id__gt=115)
 traditionals = Traditional.objects.all()
 electronics = Electronic.objects.all()
 books = Book.objects.all()
@@ -206,9 +207,10 @@ for storage in storages:
 		Export.objects.create(book=book, 
 			storage=storage, exportTime=faker.date_time_this_month(), quantity=q, staff=random.choice(staffs))
 
-payment_statuses = ['error', 'process', 'finish']
-orders = Order.objects.filter(id__gt=3).exclude(status='Unpaid').prefetch_related('orderitem_set')
+payment_statuses = ['finish']
+orders = Order.objects.filter(id__gt=115).exclude(status='Unpaid').prefetch_related('orderitem_set')
 
+order = Order.objects.filter(orderTime__gte='2020-12-30')
 for order in orders:
 	status = random.choice(payment_statuses)
 	if status != 'finish':
@@ -230,3 +232,12 @@ for payment in payments:
 	payment.status = status
 	payment.paymentTime = payment.order.orderTime
 	payment.save()
+
+orders = Order.objects.filter(orderTime__gte='2020-12-30')
+for order in orders:
+	order.orderTime = faker.date_time_this_month()
+	order.save()
+
+payments = Payment.objects.filter(paymentTime__gte='2020-12-30')
+for payment in payments:
+	payment.paymentTime = payment.order.orderTime	

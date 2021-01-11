@@ -358,10 +358,13 @@ def export_order(request, pk):
 		item_list = order.orderitem_set.all().select_related("book")
 
 		for item in item_list:
-			if item.option == "buy":
-				book = item.book.traditional
-				export_item = Export(book=book, staff=staff, storage=storage, quantity=item.quantity)
-				export_item.save()
+			try:
+				if item.option == "buy":
+					book = item.book.traditional
+					export_item = Export(book=book, staff=staff, storage=storage, quantity=item.quantity)
+					export_item.save()
+			except:
+				pass
 		order.status = "Delivered"
 		order.save()
 

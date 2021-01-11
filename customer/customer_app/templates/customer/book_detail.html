@@ -1,200 +1,218 @@
-{% extends 'customer/main.html' %}
-{% load static %}
-{% load l10n %}
-{% load humanize %}
-
+{% extends 'customer/main.html' %} 
+{% load static %} 
+{% load l10n %} 
+{% load humanize %} 
 {% block content %}
-	<div class="breadcrumb">
-        <div class="container">
-            <a class="breadcrumb-item" href="{% url 'home' %}">Trang chủ</a>
-            <a class="breadcrumb-item" href="{% url 'shop' %}">Sách</a>
-            <span class="breadcrumb-item active">{{ object.name }}</span>
-        </div>
+<div class="breadcrumb">
+    <div class="container">
+        <a class="breadcrumb-item" href="{% url 'home' %}">Trang chủ</a>
+        <a class="breadcrumb-item" href="{% url 'shop' %}">Sách</a>
+        <span class="breadcrumb-item active">{{ object.name }}</span>
     </div>
-    <section class="product-sec">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-5 col-md-6 col-sm-12">
-                    <!-- main slider carousel -->
-                    {% with book_image=object.book_image_set.all %}
-                    {% if book_image %}
-                    <div id="bookCarousel" class="carousel carousel-fade carousel-thumbnails">
-                        <!-- main slider carousel items -->
-                        <div class="carousel-inner">
-                            {% for image in book_image %}
-                                <div class="{% if forloop.counter0 == 0 %} active {% endif %} carousel-item detail-img-container" data-slide-number="{{ forloop.counter0 }}">
-                                    <img src="{{image.image_url}}" class="book-img">
-                                </div>
-                            {% endfor %}
-                        </div>
-                        <!-- main slider carousel nav controls -->
-                        <ul class="carousel-indicators list-inline mx-auto px-2">
-                            {% for image in book_image %}
-                                <li id="carousel-selector-{{ forloop.counter0 }}" data-slide-to="{{ forloop.counter0 }}" data-target="#bookCarousel" class="list-inline-item {% if forloop.counter0 == 0 %} active {% endif %}">
-                                    <a id="carousel-selector-{{ forloop.counter0 }}" class="selected" data-slide-to="{{ forloop.counter0 }}" data-target="#bookCarousel">
-                                        <img src="{{image.image_url}}" class="img-fluid book-img">
-                                    </a>
-                                </li>
-                            {% endfor %}
-                        </ul>
+</div>
+<section class="product-sec">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-5 col-md-6 col-sm-12">
+                <!-- main slider carousel -->
+                {% with book_image=object.book_image_set.all %}
+                {% if book_image %}
+                <div id="bookCarousel" class="carousel carousel-fade carousel-thumbnails">
+                    <!-- main slider carousel items -->
+                    <div class="carousel-inner">
+                        {% for image in book_image %}
+                            <div class="{% if forloop.counter0 == 0 %} active {% endif %} carousel-item detail-img-container" data-slide-number="{{ forloop.counter0 }}">
+                                <img src="{{image.image_url}}" class="book-img">
+                            </div>
+                        {% endfor %}
                     </div>
-                    {% else %}
-                        <div class="detail-img-container">
-                            <img src="{% static 'images/default_book.png' %}" class="book-img">
-                        </div>
-                    {% endif %}
-                    {% endwith %}
+                    <!-- main slider carousel nav controls -->
+                    <ul class="carousel-indicators list-inline mx-auto px-2">
+                        {% for image in book_image %}
+                            <li id="carousel-selector-{{ forloop.counter0 }}" data-slide-to="{{ forloop.counter0 }}" data-target="#bookCarousel" class="list-inline-item {% if forloop.counter0 == 0 %} active {% endif %}">
+                                <a id="carousel-selector-{{ forloop.counter0 }}" class="selected" data-slide-to="{{ forloop.counter0 }}" data-target="#bookCarousel">
+                                    <img src="{{image.image_url}}" class="img-fluid book-img">
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
                 </div>
-                <div class="col-lg-7 col-md-6 col-sm-12 slider-content">
-                    <h1 class="mb-2">{{ object.name }}</h1>
-                    <div class="mb-3">
-                        <span ><i class="fa fa-star star-checked"></i></span>
-                        <span ><i class="fa fa-star star-checked"></i></span>
-                        <span ><i class="fa fa-star star-checked"></i></span>
-                        <span ><i class="fa fa-star star-checked"></i></span>
-                        <span ><i class="fa fa-star-o star-checked"></i></span>
-                        <span>({{object.total_rating}} đánh giá)</span>
-                   </div>
-                    <ul>
-                        <li>
-                            <span class="name">Nhà xuất bản</span><span class="clm">:</span>
-                            <span class="price">{{ object.publisher.name}}</span>
-                        </li>
-                        <li>
-                            <span class="name">Tác giả</span><span class="clm">:</span>
-                            <span class="price">{{ object.author_list}}</span>
-                        </li>
-                        <li>
-                            <span class="name">Thể loại</span><span class="clm">:</span>
-                            <span class="price">{{ object.topic_list}}</span>
-                        </li>
-                    </ul>
-                    {% if object.description %}
-                    <p>{{ object.description }}</p>
+                {% else %}
+                    <div class="detail-img-container">
+                        <img src="{% static 'images/default_book.png' %}" class="book-img">
+                    </div>
+                {% endif %}
+                {% endwith %}
+            </div>
+            <div class="col-lg-7 col-md-6 col-sm-12 slider-content">
+                <h1 class="mb-2">{{ object.name }}</h1>
+                <div class="mb-3">
+                    <span><i class="fa fa-star star-checked"></i></span>
+                    <span><i class="fa fa-star star-checked"></i></span>
+                    <span><i class="fa fa-star star-checked"></i></span>
+                    <span><i class="fa fa-star star-checked"></i></span>
+                    <span><i class="fa fa-star-o star-checked"></i></span>
+                    <span>({{object.total_rating}} đánh giá)</span>
+                </div>
+                <ul>
+                    <li>
+                        <span class="name">Nhà xuất bản</span><span class="clm">:</span>
+                        <span class="price">{{ object.publisher.name}}</span>
+                    </li>
+                    <li>
+                        <span class="name">Tác giả</span><span class="clm">:</span>
+                        <span class="price">{{ object.author_list}}</span>
+                    </li>
+                    <li>
+                        <span class="name">Thể loại</span><span class="clm">:</span>
+                        <span class="price">{{ object.topic_list}}</span>
+                    </li>
+                </ul>
+                {% if object.description %}
+                <p>{{ object.description }}</p>
+                {% endif %}
+                <ul>
+                    <li>
+                        <span class="name">Giá bán</span><span class="clm">:</span>
+                        <span class="price">{{ object.price | floatformat | intcomma:False }} đ</span>
+                    </li>
+                    {% if object.electronic %}
+                    <li>
+                        <span class="name">Giá thuê</span><span class="clm">:</span>
+                        <span class="price">{{ object.rent_price | floatformat | intcomma:False }} đ/ {{ object.rent_duration }} ngày</span>
+                    </li>
                     {% endif %}
-                    <ul>
-                        <li>
-                            <span class="name">Giá bán</span><span class="clm">:</span>
-                            <span class="price">{{ object.price | floatformat | intcomma:False }} đ</span>
-                        </li>
-                        {% if object.electronic %}
-                        <li>
-                            <span class="name">Rent Price</span><span class="clm">:</span>
-                            <span class="price">{{ object.rent_price | floatformat | intcomma:False }} đ/ {{ object.rent_duration }} ngày</span>
-                        </li>
-                        {% endif %}
-                    </ul>
-                    <br>
-                    <form>
-                        {% csrf_token %}
-                        {% if object.traditional %}
-                        <div class="form-check">
-                            <label class="form-check-label" for="radio1">
+                </ul>
+                <br>
+                <form>
+                    {% csrf_token %} {% if object.traditional %}
+                    <div class="form-check">
+                        <label class="form-check-label" for="radio1">
                                 <input type="radio" class="form-check-input" id="radio1" name="book-option" value="buy" onchange="updateBookOption(this)" checked>Mua sách in
                             </label>
-                        </div>
-                        {% endif %}
-
-                        {% if object.electronic %}
-                        <div class="form-check">
-                            <label class="form-check-label" for="radio2">
+                    </div>
+                    {% endif %} {% if object.electronic %}
+                    <div class="form-check">
+                        <label class="form-check-label" for="radio2">
                                 <input type="radio" class="form-check-input" id="radio2" name="book-option" value="eBuy" onchange="updateBookOption(this)" {% if not object.traditional %} checked {% endif %}>Mua sách điện tử
                             </label>
-                        </div>
-                        <div class="form-check">
-                            <label class="form-check-label" for="radio3">
+                    </div>
+                    <div class="form-check">
+                        <label class="form-check-label" for="radio3">
                                 <input type="radio" class="form-check-input" id="radio3" name="book-option" value="eRent" onchange="updateBookOption(this)">Thuê sách điện tử
                             </label>
-                        </div>
-                        {% endif %}
+                    </div>
+                    {% endif %}
 
-                        <div class="form-group mt-3" style="max-width: 320px">
-                            <label for="book-quantity">Số lượng: </label>
-                            <input type="number" step="1" pattern="^[0-9]" min="1" class="form-control" id="book-quantity" value="1">
-                        </div>
-                        
-                    </form>
-                    <button data-product="{{object.ISBN}}" data-action="add" class="btn-custom mt-4 update-cart">Thêm vào giỏ hàng</button>
-                </div>
+                    <div class="form-group mt-3" style="max-width: 320px">
+                        <label for="book-quantity">Số lượng: </label>
+                        <input type="number" step="1" pattern="^[0-9]" min="1" class="form-control" id="book-quantity" value="1">
+                    </div>
+
+                </form>
+                <button data-product="{{object.ISBN}}" data-action="add" class="btn-custom mt-4 update-cart">Thêm vào giỏ hàng</button>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
-    <div class="container">
-        <h4 class="mb-3">Thông tin chi tiết </h4>
-        <hr>
-        <div class="table-responsive">
-          <table class="table table-sm table-bordered">
+<div class="container">
+    <h4 class="mb-3">Thông tin chi tiết </h4>
+    <hr>
+    <div class="table-responsive">
+        <table class="table table-sm table-bordered">
             <colgroup>
                 <col class="w-25 bg-light">
                 <col class="w-75">
             </colgroup>
-              <tr>
+            <tr>
                 <td>ISBN</td>
                 <td>{{ object.ISBN }}</td>
-              </tr>
-              <tr>
+            </tr>
+            <tr>
                 <td>Tên</td>
                 <td>{{ object.name }}</td>
-              </tr>
-              <tr>
+            </tr>
+            <tr>
                 <td>Nhà xuất bản</td>
                 <td>{{ object.publisher.name }}</td>
-              </tr>
-              <tr>
+            </tr>
+            <tr>
                 <td>Năm xuất bản</td>
                 <td>{{ object.year }}</td>
-              </tr>
-              <tr>
+            </tr>
+            <tr>
                 <td>Tác giả</td>
                 <td>{{ object.author_list }}</td>
-              </tr>
-              <tr>
+            </tr>
+            <tr>
                 <td>Thể loại</td>
                 <td>{{ object.topic_list }}</td>
-              </tr>
-              <tr>
+            </tr>
+            <tr>
                 <td>Từ khóa</td>
                 <td>{{ object.keyword_list }}</td>
-              </tr>
-        </table>  
-        </div>
-        
-        <h4 class="mb-3 mt-5">Cùng tác giả </h4>
-        <hr>
-        <div class="row">
-            {% for book in same_author %}
-            <div class="col-lg-2 col-md-3 col-sm-4 col-6">
-                <a href="{% url 'book_detail' book.ISBN %}">
-                    <div class="book-item">
-                        <div class="img-fluid book-img-container">
-                            <img class="book-img" src="{% if book.image_url != '' %} {{ book.image_url }} {% else %} {% static 'images/default_book.png' %} {% endif %}" alt="img">
-                        </div>
-                        <p class="book-title">{{ book.name | truncatechars:20 }}</p>
-                        <p class="book-author">{{ book.author_list | truncatechars:20 }}</p>
-                        <p class="book-price">{{ book.price | floatformat | intcomma:False }} đ</p>
-                    </div>
-                </a>
-            </div>
-            {% endfor %}
-        </div>
-        <h4 class="mb-3 mt-5">Cùng thể loại </h4>
-        <hr>
-        <div class="row">
-            {% for book in same_topic %}
-            <div class="col-lg-2 col-md-3 col-sm-4 col-6">
-                <a href="{% url 'book_detail' book.ISBN %}">
-                    <div class="book-item">
-                        <div class="img-fluid book-img-container">
-                            <img class="book-img" src="{% if book.image_url != '' %} {{ book.image_url }} {% else %} {% static 'images/default_book.png' %} {% endif %}" alt="img">
-                        </div>
-                        <p class="book-title">{{ book.name | truncatechars:20 }}</p>
-                        <p class="book-author">{{ book.author_list | truncatechars:20 }}</p>
-                        <p class="book-price">{{ book.price | floatformat | intcomma:False }} đ</p>
-                    </div>
-                </a>
-            </div>
-            {% endfor %}
-        </div>
+            </tr>
+        </table>
     </div>
-{% endblock %}
+
+    <!--  <h4 class="mb-3 mt-5">Nhận xét </h4>
+    <div class="bg-white rounded shadow-sm p-4 mb-4 restaurant-detailed-ratings-and-reviews">
+        <a href="#" class="btn btn-outline-primary btn-sm float-right">Top Rated</a>
+        <div class="reviews-members pt-4 pb-4">
+            <div class="media">
+                <a href="#"><img alt="Generic placeholder image" src="{{item.customer__avatar}}"></a>
+                <div class="media-body">
+                    <div class="reviews-members-header">
+                        <h6 class="mb-1"><a class="text-black" href="#">{{customer__firstName}} {{customer__lastName}}</a></h6>
+                        <p class="text-gray">{{item.reviewTime|date:"M d, Y"}}</p>
+                    </div>
+                    <div class="reviews-members-body">
+                        <p>{{item.comment}} </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <a class="text-center w-100 d-block mt-4 font-weight-bold" href="#">See All Reviews</a>
+    </div>
+    </h4>-->
+
+    <h4 class="mb-3 mt-5">Cùng tác giả </h4>
+    <hr>
+    <div class="row">
+        {% for book in same_author %}
+        <div class="col-lg-2 col-md-3 col-sm-4 col-6">
+            <a href="{% url 'book_detail' book.ISBN %}">
+                <div class="book-item">
+                    <div class="img-fluid book-img-container">
+                        <img class="book-img" src="{% if book.image_url != '' %} {{ book.image_url }} {% else %} {% static 'images/default_book.png' %} {% endif %}" alt="img">
+                    </div>
+                    <p class="book-title">{{ book.name | truncatechars:20 }}</p>
+                    <p class="book-author">{{ book.author_list | truncatechars:20 }}</p>
+                    <p class="book-price">{{ book.price | floatformat | intcomma:False }} đ</p>
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+    <h4 class="mb-3 mt-5">Cùng thể loại </h4>
+    <hr>
+    <div class="row">
+        {% for book in same_topic %}
+        <div class="col-lg-2 col-md-3 col-sm-4 col-6">
+            <a href="{% url 'book_detail' book.ISBN %}">
+                <div class="book-item">
+                    <div class="img-fluid book-img-container">
+                        <img class="book-img" src="{% if book.image_url != '' %} {{ book.image_url }} {% else %} {% static 'images/default_book.png' %} {% endif %}" alt="img">
+                    </div>
+                    <p class="book-title">{{ book.name | truncatechars:20 }}</p>
+                    <p class="book-author">{{ book.topic_list | truncatechars:20 }}</p>
+                    <p class="book-price">{{ book.price | floatformat | intcomma:False }} đ</p>
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+<link rel="stylesheet" href="{% static 'css/review.css' %}"> {% endblock %}

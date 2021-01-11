@@ -69,9 +69,9 @@ class Order(models.Model):
 	ORDER_STATUS = [
 		('Unpaid', 'Chưa thanh toán'),
 		('Pending', 'Đang xử lý'),
-		('Delivered', 'Đã xuất kho'),
+		('Delivered', 'Đang giao hàng'),
 		('Cancel', 'Đã hủy'),
-		('Error', 'Lỗi')
+		('Error', 'Gặp sự cố')
 	]
 
 	customer = models.ForeignKey(Customer, on_delete=models.CASCADE, null=True, blank=True, db_column='customerId')
@@ -112,6 +112,7 @@ class Order(models.Model):
 		if created == False and order_item.option != option:
 			return created, f'Bạn không được phép có 2 lựa chọn mua hàng khác nhau cho cùng một sách'
 		order_item.option = option
+		old_quantity = order_item.quantity
 
 		if action == 'update':
 			order_item.quantity = quantity
@@ -121,9 +122,9 @@ class Order(models.Model):
 		if option == "buy" and order_item.quantity > book.allow_number:
 			if created:
 				order_item.delete()
-			return created, f'Số lượng sách {book.name} tối đa được phép mua là: {book.allow_number}'
+			return created, f'Số lượng sách {book.name} tối đa được phép mua là: {book.allow_number}\nSố lượng sách hiện tại có trong giỏ hàng: {old_quantity}'
 		elif option == "eBuy" and order_item.quantity > 1:
-			return created, f'Số lượng sách điện tử {book.name} được phép mua là: 1'
+			return created, f'Số lượng sách điện tử {book.name} được phép mua là: 1\nSố lượng sách hiện tại có trong giỏ hàng: {old_quantity}'
 		else:	
 			order_item.save()
 		return created, 'success'
@@ -300,6 +301,11 @@ class Payment(models.Model):
 		('credit', 'Thanh toán thẻ'),
 		('transfer', 'Chuyển khoản')
 	]
+	PAYMENT_STATUS = [
+		('error', 'Gặp sự cố'),
+		('process', 'Đang giải quyết'),
+		('finish', 'Hoàn thành')
+	]
 
 	customer = models.ForeignKey(Customer, on_delete=models.CASCADE, null=True, blank=True, db_column='customerId')
 	order = models.ForeignKey(Order, on_delete=models.CASCADE, db_column='orderId')
@@ -308,6 +314,8 @@ class Payment(models.Model):
 	paymentTime = models.DateTimeField(auto_now_add=True)
 	method = models.CharField(max_length=12, choices=PAYMENT_METHOD, default='transfer')
 	amount = models.DecimalField(max_digits=10, decimal_places=2)
+	status = models.CharField(max_length=12, choices=PAYMENT_STATUS, default='finish')
+	reason = models.CharField(max_length=120, default="")
 
 	class Meta:
 		managed = False

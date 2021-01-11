@@ -19,7 +19,8 @@ from .filters import *
 from .utils import cartData
 from .forms import *
 from .decorators import *
-
+from functools import reduce
+from datetime import *
 # Create your views here.
 @unauthenticated_user
 def login_page(request):
@@ -136,17 +137,28 @@ def cart(request):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['customer'])
-def checkout(request):
-	data = cartData(request)
-	order = data['order']
-	items = data['items']
-	total = data['total']
+def checkout(request, id=None):
+	customer = request.user.customer
+	cards = Card.objects.filter(customer=customer)
 
+	if not id:
+		data = cartData(request)
+		order = data['order']
+		items = data['items']
+		total = data['total']
+	else: 
+		try:
+			order = Order.objects.get(customer=customer, id=id,status='Unpaid')
+			items = order.orderitem_set.all()
+			total = reduce(lambda x, y: x + y.subtotal, items, 0)
+		except:
+			return JsonResponse("Vui lòng thử lại sau.", safe=False)
 	context = {
 		"order": order,
 		"items": items,
 		"total": total,
 		"shipping": order.shipping,
+		'cards': cards
 	}
 	return render(request, 'customer/checkout.html', context)
 
@@ -158,7 +170,7 @@ def order(request):
 	order_filter = OrderFilter(request.GET, queryset=order_list)
 
 	order_list = order_filter.qs
-	order_list = order_list.prefetch_related("orderitem_set")
+	order_list = order_list.order_by("-orderTime").prefetch_related("orderitem_set")
 
 	paginator = Paginator(order_list, 10) # Show 10 authors per page.
 
@@ -387,13 +399,102 @@ def processOrder(request):
 	if shipping == True:
 		order.shippingAddress = shipping_address
 
+	mess = "Payment was completed"
 	if payment_option == "card":
+		cardId = data['form']['cardId']
 		method = "credit"
+		try: 
+			card = Card.objects.get(customer=customer, id=cardId)
+			if card.expireDate < date.today():
+				mess = "Thẻ hết hạn. Vui lòng chọn thẻ hoặc hình thức thanh toán khác."	
+		except: mess =  "Payment was completed"
 	else:
 		method = "transfer"
-
+	if mess == 'Payment was completed':
+		order.status = 'Pending'
 	Payment.objects.create(customer=customer, order=order, method=method, amount=total)
-
 	order.save()
 
-	return JsonResponse("Payment was completed", safe=False)
+	return JsonResponse({'mess': mess}, safe=False)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['customer'])
+def order_detail(request, pk):
+	customer = request.user.customer
+	item_list = OrderItem.objects.filter(order__customer=customer, order__id=pk)
+	item_filter = OrderItemFilter(request.GET, queryset=item_list)
+	
+	item_list = item_filter.qs
+	book_list = item_list.values("book", "book__ISBN", "book__name", "book__price",).annotate(
+	book_count=Sum("quantity"))
+	# tmp_order = Order.objects.filter(customer=customer, id=pk)
+	order = Order.objects.get(customer=customer, id=pk)
+	paginator = Paginator(book_list, 10) # Show 10 contacts per page.
+
+	page_number = request.GET.get('page')
+	page_obj = paginator.get_page(page_number)
+	state = {'Unpaid': (1, 'Thanh toán'), 'Pending': (2, 'Huỷ đơn hàng'), 'Error': (2, 'Huỷ đơn hàng'), 'Delivered': (3, 'Đã nhận hàng'), 'Successful': (4,'Thành công'), 'Cancel': (3, 'Đã huỷ đơn hàng')}
+
+	stt = ['Unpaid', 'Pending', 'Error', 'Successful', 'Cancel', 'Delivered']
+	# stt = stt[5]
+	# status, next_step = state[stt][0], state[stt][1]
+	status, next_step = state[order.status][0], state[order.status][1]
+	
+	context = {
+		'page_obj': page_obj,
+		'filter': item_filter,
+		'order': pk,		
+		'status': status,
+		'next_step': next_step
+	}
+	return render(request, 'customer/order_detail.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['customer'])
+def order_update(request):
+	customer = request.user.customer
+	data = json.loads(request.body)
+	id, stt = data['id'], data['status']
+	try:
+		order = Order.objects.get(customer=customer, id=id)
+		order.status = 'Pending' if stt == 2 else \
+			'Successful' if stt == 5 or order.status == 'Delivered' else 'Cancel'
+		order.save()
+		return JsonResponse("Cập nhật thành công", safe=False)
+	except:
+		return JsonResponse("Vui lòng thử lại sau.", safe=False)
+
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['customer'])
+def review(request, order, pk):
+	customer = request.user.customer
+	book_query = Book.objects.annotate(
+		total_rating=Count("review"),
+		avg_rating=Avg("review__rating")
+		).select_related("traditional", "electronic", "publisher")
+	book = get_object_or_404(book_query, ISBN=pk)
+
+	context = {
+		'order': order,
+		'object': book,
+	}
+	return render(request, 'customer/review.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['customer'])
+def addReview(request):
+	data = json.loads(request.body)
+	rating, cmt, isbn = data['rating'], data['cmt'], data['bookId']
+	
+	customer = request.user.customer
+	book, created = Book.objects.get_or_create(ISBN=isbn)
+	try:
+		review = Review.objects.create(customer=customer, book=book, reviewTime=datetime.now(),comment=cmt, rating=int(rating))
+		return JsonResponse("Đánh giá thành công", safe=False)
+	except:
+		return JsonResponse("Đã xảy ra lỗi. Vui lòng thử lại sau.", safe=False)
+
+
+	
+	

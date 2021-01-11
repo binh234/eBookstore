@@ -50,7 +50,7 @@ class CustomerForm(ModelForm):
 class CardForm(ModelForm):
 	ownerName = forms.CharField(label='Chủ thẻ')
 	code = forms.CharField(label='Mã thẻ')
-	expireDate = forms.CharField(label='Ngày hết hạn', widget=forms.DateInput(format='%d/%m/%Y', attrs={'class': 'datepicker'}))
+	expireDate = forms.CharField(label='Ngày hết hạn', widget=forms.DateInput(attrs={'type': 'date'}))
 	bank = forms.CharField(label='Ngân hàng')
 	branch = forms.CharField(label='Chi nhánh')
 

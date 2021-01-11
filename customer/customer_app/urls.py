@@ -26,8 +26,10 @@ urlpatterns = [
 
     path('cart/', cart, name='cart'),
     path('checkout/', checkout, name='checkout'),
+    path('checkout/<str:id>/', checkout, name='checkout'),
 
     path('order/', order, name='order'),
+    path('order/<str:pk>/', order_detail, name='order_detail'),
 
     path('author/', author, name='author'),
     path('author/<str:pk>/', authorBookList, name='author-book-list'),
@@ -44,4 +46,9 @@ urlpatterns = [
 
 	path('update-item/', updateItem, name='update-item'),
     path('process-order/', processOrder, name='process-order'),
+
+    path('review/<str:pk>/', review, name='review'),
+    path('review/<str:order>/<str:pk>', review, name='review'),
+    path('addReview/', addReview, name='addReview'),
+    path('order_update/', order_update, name='order_update')
 ]
