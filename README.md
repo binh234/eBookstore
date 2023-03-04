@@ -1,4 +1,64 @@
 # eBookstore
+A web-based application that allows users to browse, search, and purchase books online. The goal is to provide a convenient and efficient way for users to buy books online while giving the bookstore a digital platform to expand their reach and manage their inventory.
+
+### Customer
+- [x] Secure login/logout
+- [x] Search functionalities
+- [x] Book details
+- [x] Recommended books
+- [x] Card checking
+- [x] Cart
+- [x] Checkout
+- [x] View and update profile
+- [x] Secure online payment with Momo API
+- [x] Fully responsive
+
+### Manager
+- [x] Secure login/logout
+- [x] Dashboard with statistics
+- [x] View and update profile
+- [x] Manage books
+- [x] Manage orders
+- [x] Manage inventory
+
+## Screenshots
+
+<details>
+  <summary><b>Customer</b></summary>
+  <img src="screenshots/customer/login.png" alt="screenshot">
+  <br /><br />
+  <img src="screenshots/customer/home1.png" alt="screenshot">
+  <img src="screenshots/customer/home2.png" alt="screenshot">
+  <br /><br />
+  <img src="screenshots/customer/shop.png" alt="screenshot">
+  <br /><br />
+  <img src="screenshots/customer/book1.png" alt="screenshot">
+  <img src="screenshots/customer/book2.png" alt="screenshot">
+  <br /><br />
+  <img src="screenshots/customer/cart.png" alt="screenshot">
+  <img src="screenshots/customer/checkout.png" alt="screenshot">
+  <br /><br />
+  <img src="screenshots/customer/card.png" alt="screenshot">
+  <br /><br />
+  <img src="screenshots/customer/order.png" alt="screenshot">
+  <img src="screenshots/customer/author.png" alt="screenshot">
+</details>
+
+<details>
+  <summary><b>Manager</b></summary>
+  <img src="screenshots/staff/dashboard.png" alt="screenshot">
+  <br /><br />
+  <img src="screenshots/staff/author.png" alt="screenshot">
+  <br /><br />
+  <img src="screenshots/staff/storage.png" alt="screenshot">
+  <br /><br />
+  <img src="screenshots/staff/book.png" alt="screenshot">
+  <img src="screenshots/staff/book2.png" alt="screenshot">
+  <br /><br />
+  <img src="screenshots/staff/order_detail.png" alt="screenshot">
+  <br /><br />
+  <img src="screenshots/staff/profile.png" alt="screenshot">
+</details>
 
 ## Clone project
 ```
@@ -7,39 +67,24 @@ git clone https://github.com/binh234/eBookstore.git
 cd  eBookstore/eBookstore
 ```
 
-## Cài đặt Anaconda
-> Tải và cài đặt Anoconda tại đây: [Anaconda installation](https://docs.anaconda.com/anaconda/install/)
-
-### Tạo và sử dụng môi trường ảo python với conda
-```
-conda create --name <env_name> python=3.8
-
-activate <env_name>
-```
-> Thay <env_name> bằng tên môi trường cần tạo  
-> **Lưu ý**: Để đảm bảo project hoạt động tốt, sử dụng lệnh *activate* để kích hoạt môi trường ảo trước khi thực hiện các lệnh bên dưới
-
-## Cài đặt các thư viện cần thiết
+## Install libraries
 ```
 pip install -r requirements.txt
 ```
 
-## Chuẩn bị MySQL
-> Đảm bảo có một schema tên **bookstore** với user là **root** và password là **Admin.12345**
+## Prepare database
+> Make sure your MySQL database has a **bookstore** database with user **root** and password **Admin.12345**
 <img src="./screenshots/database.png">
 
-## Migrate data vào MySQL
+## Migrate data into MySQL
 ```
 python manage.py migrate
 ```
 
-## Nạp dữ liệu vào database
+## Load data into database
 ```
 python manage.py loaddata db.json
 ```
-
-## Phân quyền cho nhóm người dùng
-> Chạy file **grant_role.sql** trong MySQL để tạo và phân quyền cho các nhóm người dùng
 
 ### Phát triển ứng dụng cho khách hàng
 ```
@@ -47,7 +92,7 @@ cd eBookstore/customer
 
 python manage.py runserver
 ```
-Mở [localhost:8000](http://localhost:8000).
+Go to [localhost:8000](http://localhost:8000).
 
 ### Phát triển ứng dụng cho nhân viên
 ```
@@ -55,23 +100,4 @@ cd eBookstore/staff
 
 python manage.py runserver
 ```
-Mở [localhost:8000](http://localhost:8000).
-
-### Thêm 1 template mới vào project
-* Thêm file **.html** vào thư mục <app_name>/template/<app_name>
-* Thêm một view function mới vào file <app_name>/views.py
-<img src="./screenshots/view_func.png">  
-
-* Thêm url mới vào file <app_name>/urls.py theo cấu trúc path('<url_path>', <view_func>, name='<url_name>')
-<img src="./screenshots/url.png">
-
-### Thêm file static (css, js, image, ...) vào project
-* Thêm file *.(css/js/...)* vào thư mục *static/(css/js/...)*
-
-### Liên kết css, js, ... vào file html
-* Thêm dòng **{% load static %}** vào file html tương ứng
-* Liên kết css, js, ... vào file html  
-*Ex:* 
-```html
-<link rel="stylesheet" href="{% static 'css/style.css' %}">
-```
+Go to [localhost:8000](http://localhost:8000).
