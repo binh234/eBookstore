@@ -1,6 +1,8 @@
 # eBookstore
 A web-based application that allows users to browse, search, and purchase books online. The goal is to provide a convenient and efficient way for users to buy books online while giving the bookstore a digital platform to expand their reach and manage their inventory.
 
+![homepage](screenshots/customer/home1.png)
+
 ### Customer
 - [x] Secure login/logout
 - [x] Search functionalities
