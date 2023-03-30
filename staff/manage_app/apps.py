@@ -2,4 +2,5 @@ from django.apps import AppConfig
 
 
 class ManageAppConfig(AppConfig):
-    name = 'manage_app'
+    default_auto_field = "django.db.models.BigAutoField"
+    name = "manage_app"

@@ -1,0 +1,8 @@
+pip install numpy
+pip install django django-filter django-active-link django-credit-cards django-extensions django-seed
+pip install dj-database-url
+pip install faker
+pip install pillow
+pip install psycopg2
+pip install mysql-connector-python
+pip install mysqlclient

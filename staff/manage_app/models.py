@@ -2,433 +2,499 @@ from django.db import models
 from django.contrib.auth.models import User
 from creditcards.models import CardNumberField
 
-# Create your models here.	
+# Create your models here.
+
 
 class Storage(models.Model):
-	country = models.CharField(max_length=20)
-	location = models.CharField(max_length=120)
+    country = models.CharField(max_length=20)
+    location = models.CharField(max_length=120)
 
-	class Meta:
-		managed = False
-		db_table = 'storage'
+    class Meta:
+        managed = False
+        db_table = "storage"
+
 
 class Customer(models.Model):
-	user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True, db_column='userId')
-	firstName = models.CharField(max_length=50)
-	lastName = models.CharField(max_length=30)
-	email = models.EmailField(blank=True)
-	phone = models.CharField(max_length=20, blank=True)
-	address = models.CharField(max_length=120, blank=True)
-	avatar = models.ImageField(blank=True)
+    user = models.OneToOneField(
+        User, on_delete=models.CASCADE, null=True, blank=True, db_column="userId"
+    )
+    firstName = models.CharField(max_length=50)
+    lastName = models.CharField(max_length=30)
+    email = models.EmailField(blank=True)
+    phone = models.CharField(max_length=20, blank=True)
+    address = models.CharField(max_length=120, blank=True)
+    avatar = models.ImageField(blank=True)
 
-	class Meta:
-		managed = False
-		db_table = 'customer'
+    class Meta:
+        managed = False
+        db_table = "customer"
 
-	@property
-	def name(self):
-		return self.firstName + " " + self.lastName	
+    @property
+    def name(self):
+        return self.firstName + " " + self.lastName
 
-	@property
-	def profile_url(self):
-		if self.avatar:
-			return self.avatar.url
-		return "/static/images/default_profile.jpg"
+    @property
+    def profile_url(self):
+        if self.avatar:
+            return self.avatar.url
+        return "/static/images/default_profile.jpg"
 
-	def __str__(self):
-		return self.name
+    def __str__(self):
+        return self.name
+
 
 class Staff(models.Model):
-	storage = models.ForeignKey(Storage, on_delete=models.PROTECT, db_column='storageId')
-	user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True, db_column='userId')
-	firstName = models.CharField(max_length=50)
-	lastName = models.CharField(max_length=30)
-	email = models.EmailField(blank=True)
-	phone = models.CharField(max_length=20, blank=True)
-	address = models.CharField(max_length=120, blank=True)
-	avatar = models.ImageField(blank=True)
+    storage = models.ForeignKey(
+        Storage, on_delete=models.PROTECT, db_column="storageId"
+    )
+    user = models.OneToOneField(
+        User, on_delete=models.CASCADE, null=True, blank=True, db_column="userId"
+    )
+    firstName = models.CharField(max_length=50)
+    lastName = models.CharField(max_length=30)
+    email = models.EmailField(blank=True)
+    phone = models.CharField(max_length=20, blank=True)
+    address = models.CharField(max_length=120, blank=True)
+    avatar = models.ImageField(blank=True)
 
-	class Meta:
-		managed = False
-		db_table = 'staff'
+    class Meta:
+        managed = False
+        db_table = "staff"
 
-	@property
-	def name(self):
-		return self.firstName + " " + self.lastName	
+    @property
+    def name(self):
+        return self.firstName + " " + self.lastName
 
-	@property
-	def profile_url(self):
-		if self.avatar:
-			return self.avatar.url
-		return "/static/images/default_profile.jpg"
+    @property
+    def profile_url(self):
+        if self.avatar:
+            return self.avatar.url
+        return "/static/images/default_profile.jpg"
 
-	def __str__(self):
-		return self.name
+    def __str__(self):
+        return self.name
+
 
 class Order(models.Model):
-	ORDER_STATUS = [
-		('Unpaid', 'Chưa thanh toán'),
-		('Pending', 'Đang xử lý'),
-		('Delivered', 'Đã xuất kho'),
-		('Cancel', 'Đã hủy'),
-		('Error', 'Gặp sự cố')
-	]
+    ORDER_STATUS = [
+        ("Unpaid", "Chưa thanh toán"),
+        ("Pending", "Đang xử lý"),
+        ("Delivered", "Đã xuất kho"),
+        ("Cancel", "Đã hủy"),
+        ("Error", "Gặp sự cố"),
+    ]
 
-	customer = models.ForeignKey(Customer, on_delete=models.CASCADE, db_column='customerId')
-	staff = models.ForeignKey(Staff, on_delete=models.SET_NULL, null=True, blank=True, db_column='staffId')
-	orderTime = models.DateTimeField(null=True)
-	lastUpdate = models.DateTimeField(auto_now=True)
-	status = models.CharField(max_length=20, choices=ORDER_STATUS, default='Unpaid')
-	shippingAddress = models.CharField(max_length=120, blank=True)
-	complete = models.BooleanField(default=False)
+    customer = models.ForeignKey(
+        Customer, on_delete=models.CASCADE, db_column="customerId"
+    )
+    staff = models.ForeignKey(
+        Staff, on_delete=models.SET_NULL, null=True, blank=True, db_column="staffId"
+    )
+    orderTime = models.DateTimeField(null=True)
+    lastUpdate = models.DateTimeField(auto_now=True)
+    status = models.CharField(max_length=20, choices=ORDER_STATUS, default="Unpaid")
+    shippingAddress = models.CharField(max_length=120, blank=True)
+    complete = models.BooleanField(default=False)
 
-	class Meta:
-		managed = False
-		db_table = 'order'
+    class Meta:
+        managed = False
+        db_table = "order"
 
-	@property
-	def shipping(self):
-		traditional_item = self.orderitem_set.filter(option='buy')
-		return traditional_item.exists()
+    @property
+    def shipping(self):
+        traditional_item = self.orderitem_set.filter(option="buy")
+        return traditional_item.exists()
 
-	@property
-	def can_export(self):
-		return self.status == "Pending" 
+    @property
+    def can_export(self):
+        return self.status == "Pending"
 
-	@property
-	def can_cancel(self):
-		return self.status in ["Unpaid", "Pending"]
+    @property
+    def can_cancel(self):
+        return self.status in ["Unpaid", "Pending"]
 
-	@property
-	def total(self):
-		return sum([item.subtotal for item in self.orderitem_set.all()])
+    @property
+    def total(self):
+        return sum([item.subtotal for item in self.orderitem_set.all()])
 
-	@property
-	def payment_method(self):
-		payment = self.payment_set.first()
-		if payment:
-			return payment.get_method_display()
-		else:
-			return "Chuyển khoản"
+    @property
+    def payment_method(self):
+        payment = self.payment_set.first()
+        if payment:
+            return payment.get_method_display()
+        else:
+            return "Chuyển khoản"
 
-	def __str__(self):
-		return str(self.id) + " - " + str(self.customer)
+    def __str__(self):
+        return str(self.id) + " - " + str(self.customer)
 
-	def add_item(self, bookISBN, quantity, option, action):
-		book = Book.objects.get(ISBN=bookISBN)
-		order_item, created = self.orderitem_set.get_or_create(book=book)
-		if created == False and order_item.option != option:
-			return created, f'Bạn không được phép có 2 lựa chọn mua hàng khác nhau cho cùng một sách'
-		order_item.option = option
+    def add_item(self, bookISBN, quantity, option, action):
+        book = Book.objects.get(ISBN=bookISBN)
+        order_item, created = self.orderitem_set.get_or_create(book=book)
+        if created == False and order_item.option != option:
+            return (
+                created,
+                f"Bạn không được phép có 2 lựa chọn mua hàng khác nhau cho cùng một sách",
+            )
+        order_item.option = option
 
-		if action == 'update':
-			order_item.quantity = quantity
-		else:
-			order_item.quantity += quantity
+        if action == "update":
+            order_item.quantity = quantity
+        else:
+            order_item.quantity += quantity
 
-		if option == "buy" and order_item.quantity > book.allow_number:
-			if created:
-				order_item.delete()
-			return created, f'Số lượng sách {book.name} tối đa được phép mua là: {book.allow_number}'
-		elif option == "eBuy" and order_item.quantity > 1:
-			return created, f'Số lượng sách điện tử {book.name} được phép mua là: 1'
-		else:	
-			order_item.save()
-		return created, 'success'
+        if option == "buy" and order_item.quantity > book.allow_number:
+            if created:
+                order_item.delete()
+            return (
+                created,
+                f"Số lượng sách {book.name} tối đa được phép mua là: {book.allow_number}",
+            )
+        elif option == "eBuy" and order_item.quantity > 1:
+            return created, f"Số lượng sách điện tử {book.name} được phép mua là: 1"
+        else:
+            order_item.save()
+        return created, "success"
 
-	def remove_item(self, bookISBN, option):
-		order_item = self.orderitem_set.get(book__ISBN=bookISBN, option=option)
-		if order_item:
-			order_item.delete()
-			return True, "success"
-		return False, "Vật phẩm không có trong giỏ hàng"
+    def remove_item(self, bookISBN, option):
+        order_item = self.orderitem_set.get(book__ISBN=bookISBN, option=option)
+        if order_item:
+            order_item.delete()
+            return True, "success"
+        return False, "Vật phẩm không có trong giỏ hàng"
+
 
 class Author(models.Model):
-	name = models.CharField(max_length=50)
-	email = models.EmailField(blank=True)
+    name = models.CharField(max_length=50)
+    email = models.EmailField(blank=True)
 
-	class Meta:
-		managed = False
-		db_table = 'author'
+    class Meta:
+        managed = False
+        db_table = "author"
 
-	def __str__(self):
-		return self.name	
+    def __str__(self):
+        return self.name
+
 
 class Publisher(models.Model):
-	name = models.CharField(max_length=50)
-	email = models.EmailField( blank=True)
-	phone = models.CharField(max_length=20, blank=True)
+    name = models.CharField(max_length=50)
+    email = models.EmailField(blank=True)
+    phone = models.CharField(max_length=20, blank=True)
 
-	class Meta:
-		managed = False
-		db_table = 'publisher'
+    class Meta:
+        managed = False
+        db_table = "publisher"
 
-	def __str__(self):
-		return self.name
+    def __str__(self):
+        return self.name
+
 
 class Book(models.Model):
-	ISBN = models.CharField(max_length=20, primary_key=True)
-	name = models.CharField(max_length=80)
-	year = models.IntegerField()
-	price = models.DecimalField(max_digits=10, decimal_places=2)
-	description = models.TextField(max_length=600, blank=True)
+    ISBN = models.CharField(max_length=20, primary_key=True)
+    name = models.CharField(max_length=80)
+    year = models.IntegerField()
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    description = models.TextField(max_length=600, blank=True)
 
-	authors = models.ManyToManyField(
+    authors = models.ManyToManyField(
         Author,
-        through='BookAuthor',
+        through="BookAuthor",
     )
-	publisher = models.ForeignKey(Publisher, on_delete=models.SET_NULL, null=True, blank=True, db_column='publisherId')
+    publisher = models.ForeignKey(
+        Publisher,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        db_column="publisherId",
+    )
 
-	class Meta:
-		managed = False
-		db_table = 'book'
+    class Meta:
+        managed = False
+        db_table = "book"
 
-	def __str__(self):
-		return self.name
+    def __str__(self):
+        return self.name
 
-	@property
-	def allow_number(self):
-		try:
-			return self.traditional.allowNumber
-		except:
-			return 0
+    @property
+    def allow_number(self):
+        try:
+            return self.traditional.allowNumber
+        except:
+            return 0
 
-	@property
-	def rent_price(self):
-		try:
-			return self.electronic.rentPrice
-		except:
-			return 0
+    @property
+    def rent_price(self):
+        try:
+            return self.electronic.rentPrice
+        except:
+            return 0
 
-	@property
-	def rent_duration(self):
-		try:
-			return self.electronic.rentDuration
-		except:
-			return 0
+    @property
+    def rent_duration(self):
+        try:
+            return self.electronic.rentDuration
+        except:
+            return 0
 
-	@property
-	def image_url(self):
-		image = self.book_image_set.first()
+    @property
+    def image_url(self):
+        image = self.book_image_set.first()
 
-		if image is None:
-			return ""
-		return image.image_url
+        if image is None:
+            return ""
+        return image.image_url
 
-	@property
-	def author_list(self):
-		author_name_list = [author.name for author in self.authors.all()]
-		return ", ".join(author_name_list)
+    @property
+    def author_list(self):
+        author_name_list = [author.name for author in self.authors.all()]
+        return ", ".join(author_name_list)
 
-	@property
-	def topic_list(self):
-		topic_name_list = self.topic_set.values_list('name', flat=True)
-		return ", ".join(topic_name_list)
+    @property
+    def topic_list(self):
+        topic_name_list = self.topic_set.values_list("name", flat=True)
+        return ", ".join(topic_name_list)
 
-	@property
-	def keyword_list(self):
-		keyword_list = self.keyword_set.values_list('keyword', flat=True)
-		return ", ".join(keyword_list)
+    @property
+    def keyword_list(self):
+        keyword_list = self.keyword_set.values_list("keyword", flat=True)
+        return ", ".join(keyword_list)
+
 
 class Traditional(models.Model):
-	book = models.OneToOneField(Book, on_delete=models.CASCADE, db_column='ISBN', primary_key=True)
-	allowNumber = models.IntegerField(default=1)
+    book = models.OneToOneField(
+        Book, on_delete=models.CASCADE, db_column="ISBN", primary_key=True
+    )
+    allowNumber = models.IntegerField(default=1)
 
-	class Meta:
-		managed = False
-		db_table = 'traditional'
+    class Meta:
+        managed = False
+        db_table = "traditional"
 
-	def __str__(self):
-		return str(self.book)
+    def __str__(self):
+        return str(self.book)
+
 
 class Electronic(models.Model):
-	book = models.OneToOneField(Book, on_delete=models.CASCADE, db_column='ISBN', primary_key=True)
-	rentPrice = models.DecimalField(max_digits=10, decimal_places=2)
-	rentDuration = models.IntegerField(default=1)
-	link = models.FileField(upload_to='uploads/')
+    book = models.OneToOneField(
+        Book, on_delete=models.CASCADE, db_column="ISBN", primary_key=True
+    )
+    rentPrice = models.DecimalField(max_digits=10, decimal_places=2)
+    rentDuration = models.IntegerField(default=1)
+    link = models.FileField(upload_to="uploads/")
 
-	class Meta:
-		managed = False
-		db_table = 'electronic'
+    class Meta:
+        managed = False
+        db_table = "electronic"
+
 
 class BookAuthor(models.Model):
-	book = models.ForeignKey(Book, on_delete=models.CASCADE, db_column='bookISBN')
-	author = models.ForeignKey(Author, on_delete=models.CASCADE, db_column='authorId')
+    book = models.ForeignKey(Book, on_delete=models.CASCADE, db_column="bookISBN")
+    author = models.ForeignKey(Author, on_delete=models.CASCADE, db_column="authorId")
 
-	class Meta:
-		managed = False
-		db_table = 'book_author'
-		unique_together = (('book', 'author'))
-			
+    class Meta:
+        managed = False
+        db_table = "book_author"
+        unique_together = ("book", "author")
+
 
 class OrderItem(models.Model):
-	OPTION = [
-		('buy', 'mua sách truyền thống'),
-		('eBuy', 'mua sách điện tử'),
-		('eRent', 'thuê sách điện tử')
-	]
+    OPTION = [
+        ("buy", "mua sách truyền thống"),
+        ("eBuy", "mua sách điện tử"),
+        ("eRent", "thuê sách điện tử"),
+    ]
 
-	order = models.ForeignKey(Order, on_delete=models.CASCADE, db_column='orderId')
-	book = models.ForeignKey(Book, on_delete=models.CASCADE, db_column='bookISBN')
-	quantity = models.IntegerField(default=0)
-	option = models.CharField(max_length=10, choices=OPTION, default='buy')
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, db_column="orderId")
+    book = models.ForeignKey(Book, on_delete=models.CASCADE, db_column="bookISBN")
+    quantity = models.IntegerField(default=0)
+    option = models.CharField(max_length=10, choices=OPTION, default="buy")
 
-	class Meta:
-		managed = False
-		db_table = 'order_item'
-		unique_together = (('book', 'order'))
+    class Meta:
+        managed = False
+        db_table = "order_item"
+        unique_together = ("book", "order")
 
-	@property
-	def subtotal(self):
-		if self.option == "eRent":
-			return self.quantity * self.book.rent_price
-		return self.quantity * self.book.price
+    @property
+    def subtotal(self):
+        if self.option == "eRent":
+            return self.quantity * self.book.rent_price
+        return self.quantity * self.book.price
 
-	def __str__(self):
-		return str(self.id) + " - " + str(self.book) 
+    def __str__(self):
+        return str(self.id) + " - " + str(self.book)
+
 
 class Card(models.Model):
-	customer = models.ForeignKey(Customer, on_delete=models.CASCADE, null=True, blank=True, db_column='customerId')
-	ownerName = models.CharField(max_length=50)
-	code = CardNumberField(max_length=20)
-	bank = models.CharField(max_length=50)
-	branch = models.CharField(max_length=50, blank=True)
-	expireDate = models.DateField()
+    customer = models.ForeignKey(
+        Customer,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        db_column="customerId",
+    )
+    ownerName = models.CharField(max_length=50)
+    code = CardNumberField(max_length=20)
+    bank = models.CharField(max_length=50)
+    branch = models.CharField(max_length=50, blank=True)
+    expireDate = models.DateField()
 
-	class Meta:
-		managed = False
-		db_table = 'card'
-		unique_together = (('customer', 'code'))
+    class Meta:
+        managed = False
+        db_table = "card"
+        unique_together = ("customer", "code")
 
-	def code_mask(self):
-		return self.code[:3] + "****" + self.code[-3:]
+    def code_mask(self):
+        return self.code[:3] + "****" + self.code[-3:]
 
-	def __str__(self):
-		return str(self.id) + " - " + str(self.customer) 
+    def __str__(self):
+        return str(self.id) + " - " + str(self.customer)
+
 
 class Payment(models.Model):
-	PAYMENT_METHOD = [
-		('credit', 'Bằng thẻ'),
-		('transfer', 'Chuyển khoản')
-	]
-	PAYMENT_STATUS = [
-		('error', 'Gặp sự cố'),
-		('process', 'Đang giải quyết'),
-		('finish', 'Hoàn thành')
-	]
+    PAYMENT_METHOD = [("credit", "Bằng thẻ"), ("transfer", "Chuyển khoản")]
+    PAYMENT_STATUS = [
+        ("error", "Gặp sự cố"),
+        ("process", "Đang giải quyết"),
+        ("finish", "Hoàn thành"),
+    ]
 
-	customer = models.ForeignKey(Customer, on_delete=models.CASCADE, db_column='customerId')
-	order = models.ForeignKey(Order, on_delete=models.CASCADE, db_column='orderId')
-	staff = models.ForeignKey(Staff, on_delete=models.SET_NULL, null=True, blank=True, db_column='staffId')
+    customer = models.ForeignKey(
+        Customer, on_delete=models.CASCADE, db_column="customerId"
+    )
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, db_column="orderId")
+    staff = models.ForeignKey(
+        Staff, on_delete=models.SET_NULL, null=True, blank=True, db_column="staffId"
+    )
 
-	paymentTime = models.DateTimeField(auto_now_add=True)
-	method = models.CharField(max_length=12, choices=PAYMENT_METHOD, default='transfer')
-	amount = models.DecimalField(max_digits=10, decimal_places=2)
-	status = models.CharField(max_length=12, choices=PAYMENT_STATUS, default='finish')
-	reason = models.CharField(max_length=120, default="")
+    paymentTime = models.DateTimeField(auto_now_add=True)
+    method = models.CharField(max_length=12, choices=PAYMENT_METHOD, default="transfer")
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    status = models.CharField(max_length=12, choices=PAYMENT_STATUS, default="finish")
+    reason = models.CharField(max_length=120, default="")
 
-	class Meta:
-		managed = False
-		db_table = 'payment'
+    class Meta:
+        managed = False
+        db_table = "payment"
 
-	def __str__(self):
-		return str(self.id) + " - " + str(self.customer) 
+    def __str__(self):
+        return str(self.id) + " - " + str(self.customer)
+
 
 class Review(models.Model):
-	RATING = [(i, i) for i in range(1, 6)]
+    RATING = [(i, i) for i in range(1, 6)]
 
-	customer = models.ForeignKey(Customer, on_delete=models.CASCADE, db_column='customerId')
-	book = models.ForeignKey(Book, on_delete=models.CASCADE, db_column='bookISBN')
+    customer = models.ForeignKey(
+        Customer, on_delete=models.CASCADE, db_column="customerId"
+    )
+    book = models.ForeignKey(Book, on_delete=models.CASCADE, db_column="bookISBN")
 
-	reviewTime = models.DateTimeField(auto_now_add=True)
-	comment = models.CharField(max_length=400)
-	rating = models.IntegerField(choices=RATING)
+    reviewTime = models.DateTimeField(auto_now_add=True)
+    comment = models.CharField(max_length=400)
+    rating = models.IntegerField(choices=RATING)
 
-	class Meta:
-		db_table = 'review'
-		unique_together = (('customer', 'book'))
+    class Meta:
+        db_table = "review"
+        unique_together = ("customer", "book")
 
-	def __str__(self):
-		return str(self.id) + " - " + str(self.book) 
+    def __str__(self):
+        return str(self.id) + " - " + str(self.book)
+
 
 class Keyword(models.Model):
-	book = models.ForeignKey(Book, on_delete=models.CASCADE, db_column='bookISBN')
-	keyword = models.CharField(max_length=20)
+    book = models.ForeignKey(Book, on_delete=models.CASCADE, db_column="bookISBN")
+    keyword = models.CharField(max_length=20)
 
-	class Meta:
-		managed = False
-		db_table = 'keyword'
-		unique_together = (('book', 'keyword'))
+    class Meta:
+        managed = False
+        db_table = "keyword"
+        unique_together = ("book", "keyword")
 
-	def __str__(self):
-		return self.keyword
+    def __str__(self):
+        return self.keyword
+
 
 class Topic(models.Model):
-	book = models.ForeignKey(Book, on_delete=models.CASCADE, db_column='bookISBN')
-	name = models.CharField(max_length=20)
+    book = models.ForeignKey(Book, on_delete=models.CASCADE, db_column="bookISBN")
+    name = models.CharField(max_length=20)
 
-	class Meta:
-		managed = False
-		db_table = 'topic'
+    class Meta:
+        managed = False
+        db_table = "topic"
 
-	def __str__(self):
-		return self.name
+    def __str__(self):
+        return self.name
+
 
 class Book_Image(models.Model):
-	book = models.ForeignKey(Book, on_delete=models.CASCADE, db_column='bookISBN')
-	image = models.ImageField()
-	# default = models.BooleanField(default=False)
+    book = models.ForeignKey(Book, on_delete=models.CASCADE, db_column="bookISBN")
+    image = models.ImageField()
+    # default = models.BooleanField(default=False)
 
-	class Meta:
-		managed = False
-		db_table = 'book_image'
-		unique_together = (('book', 'image'))
+    class Meta:
+        managed = False
+        db_table = "book_image"
+        unique_together = ("book", "image")
 
-	def __str__(self):
-		return str(self.book)
+    def __str__(self):
+        return str(self.book)
 
-	def image_url(self):
-		return self.image.url
+    def image_url(self):
+        return self.image.url
+
 
 class Inventory(models.Model):
-	book = models.ForeignKey(Traditional, on_delete=models.CASCADE, db_column='bookISBN')
-	storage = models.ForeignKey(Storage, on_delete=models.CASCADE, db_column='storageId')
-	quantity = models.IntegerField()
+    book = models.ForeignKey(
+        Traditional, on_delete=models.CASCADE, db_column="bookISBN"
+    )
+    storage = models.ForeignKey(
+        Storage, on_delete=models.CASCADE, db_column="storageId"
+    )
+    quantity = models.IntegerField()
 
-	class Meta:
-		managed = False
-		db_table = 'store'
-		unique_together = (('book', 'storage'))
+    class Meta:
+        managed = False
+        db_table = "store"
+        unique_together = ("book", "storage")
 
-	def __str__(self):
-		return str(self.id) + " - " + str(self.book) 
+    def __str__(self):
+        return str(self.id) + " - " + str(self.book)
+
 
 class Export(models.Model):
-	book = models.ForeignKey(Traditional, on_delete=models.CASCADE, db_column='bookISBN')
-	storage = models.ForeignKey(Storage, on_delete=models.CASCADE, db_column='storageId')
-	staff = models.ForeignKey(Staff, on_delete=models.PROTECT, db_column='staffId')
-	quantity = models.IntegerField()
-	exportTime = models.DateTimeField(auto_now_add=True)
+    book = models.ForeignKey(
+        Traditional, on_delete=models.CASCADE, db_column="bookISBN"
+    )
+    storage = models.ForeignKey(
+        Storage, on_delete=models.CASCADE, db_column="storageId"
+    )
+    staff = models.ForeignKey(Staff, on_delete=models.PROTECT, db_column="staffId")
+    quantity = models.IntegerField()
+    exportTime = models.DateTimeField(auto_now_add=True)
 
-	class Meta:
-		managed = False
-		db_table = 'export_history'
-		unique_together = (('book', 'storage', 'staff', 'exportTime'))
+    class Meta:
+        managed = False
+        db_table = "export_history"
+        unique_together = ("book", "storage", "staff", "exportTime")
 
-	def __str__(self):
-		return str(self.id) + " - " + str(self.book) 
+    def __str__(self):
+        return str(self.id) + " - " + str(self.book)
+
 
 class Import(models.Model):
-	book = models.ForeignKey(Traditional, on_delete=models.CASCADE, db_column='bookISBN')
-	storage = models.ForeignKey(Storage, on_delete=models.CASCADE, db_column='storageId')
-	staff = models.ForeignKey(Staff, on_delete=models.PROTECT, db_column='staffId')
-	quantity = models.IntegerField()
-	importTime = models.DateTimeField(auto_now_add=True)
+    book = models.ForeignKey(
+        Traditional, on_delete=models.CASCADE, db_column="bookISBN"
+    )
+    storage = models.ForeignKey(
+        Storage, on_delete=models.CASCADE, db_column="storageId"
+    )
+    staff = models.ForeignKey(Staff, on_delete=models.PROTECT, db_column="staffId")
+    quantity = models.IntegerField()
+    importTime = models.DateTimeField(auto_now_add=True)
 
-	class Meta:
-		managed = False
-		db_table = 'import_history'
-		unique_together = (('book', 'storage', 'staff', 'importTime'))
+    class Meta:
+        managed = False
+        db_table = "import_history"
+        unique_together = ("book", "storage", "staff", "importTime")
 
-	def __str__(self):
-		return str(self.id) + " - " + str(self.book) 
+    def __str__(self):
+        return str(self.id) + " - " + str(self.book)

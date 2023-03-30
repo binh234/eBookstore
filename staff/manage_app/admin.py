@@ -17,4 +17,3 @@ admin.site.register(Author)
 admin.site.register(Publisher)
 admin.site.register(Book_Image)
 admin.site.register(BookAuthor)
-

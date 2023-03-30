@@ -1,9 +1,11 @@
 # eBookstore
+
 A web-based application that allows users to browse, search, and purchase books online. The goal is to provide a convenient and efficient way for users to buy books online while giving the bookstore a digital platform to expand their reach and manage their inventory.
 
 ![homepage](screenshots/customer/home1.png)
 
-### Customer
+## Customer
+
 - [x] Secure login/logout
 - [x] Search functionalities
 - [x] Book details
@@ -15,7 +17,8 @@ A web-based application that allows users to browse, search, and purchase books 
 - [x] Secure online payment with Momo API
 - [x] Fully responsive
 
-### Manager
+## Manager
+
 - [x] Secure login/logout
 - [x] Dashboard with statistics
 - [x] View and update profile
@@ -63,43 +66,58 @@ A web-based application that allows users to browse, search, and purchase books 
 </details>
 
 ## Clone project
-```
+
+```bash
 git clone https://github.com/binh234/eBookstore.git
 
-cd  eBookstore/eBookstore
+cd  eBookstore
 ```
 
 ## Install libraries
-```
+
+```bash
 pip install -r requirements.txt
 ```
 
 ## Prepare database
-> Make sure your MySQL database has a **bookstore** database with user **root** and password **Admin.12345**
-<img src="./screenshots/database.png">
 
-## Migrate data into MySQL
-```
+## Setting up database environemnt
+
+Set an environment variable called DATABASE_URL to store your connection string, for example:
+
+- PostgreSQL: `postgresql://username:password@host:port/database_name`
+- MySQL: `mysql://username:password@host:port/database_name`
+
+## Migrate data
+
+```bash
+# Inside customer directory
 python manage.py migrate
 ```
 
-## Load data into database
-```
-python manage.py loaddata db.json
+## Load data
+
+```bash
+# Inside customer directory
+python manage.py loaddata ../db.json
 ```
 
-### Phát triển ứng dụng cho khách hàng
-```
-cd eBookstore/customer
+## Customer app development
+
+```bash
+cd customer
 
 python manage.py runserver
 ```
+
 Go to [localhost:8000](http://localhost:8000).
 
-### Phát triển ứng dụng cho nhân viên
-```
-cd eBookstore/staff
+## Staff app development
+
+```bash
+cd staff
 
 python manage.py runserver
 ```
+
 Go to [localhost:8000](http://localhost:8000).
