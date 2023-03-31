@@ -196,10 +196,7 @@ class Book(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2)
     description = models.TextField(max_length=600, blank=True)
 
-    authors = models.ManyToManyField(
-        Author,
-        through="BookAuthor",
-    )
+    authors = models.ManyToManyField(Author, through="BookAuthor",)
     publisher = models.ForeignKey(
         Publisher,
         on_delete=models.SET_NULL,

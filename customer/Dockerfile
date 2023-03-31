@@ -6,7 +6,9 @@ COPY ../requirements.txt .
 
 RUN pip install -r requirements.txt
 
-COPY ./customer .
+COPY . .
+
+ENV PYTHONUNBUFFERED=1
 
 EXPOSE 8000
 

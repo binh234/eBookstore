@@ -485,10 +485,7 @@ def payment(request):
         ).select_related("customer")
         data["form_is_valid"] = True
         data["list"] = render_to_string(
-            "payment/payment_item.html",
-            {
-                "card_payment_list": card_payment_list,
-            },
+            "payment/payment_item.html", {"card_payment_list": card_payment_list,},
         )
         return JsonResponse(data)
 

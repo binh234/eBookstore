@@ -23,9 +23,6 @@ class Migration(migrations.Migration):
                 ),
                 ("quantity", models.IntegerField()),
             ],
-            options={
-                "db_table": "store",
-                "managed": False,
-            },
+            options={"db_table": "store", "managed": False,},
         ),
     ]

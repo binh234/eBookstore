@@ -464,10 +464,7 @@ def order_detail(request, pk):
 
     item_list = item_filter.qs
     book_list = item_list.values(
-        "book",
-        "book__ISBN",
-        "book__name",
-        "book__price",
+        "book", "book__ISBN", "book__name", "book__price",
     ).annotate(book_count=Sum("quantity"))
     # tmp_order = Order.objects.filter(customer=customer, id=pk)
     order = Order.objects.get(customer=customer, id=pk)

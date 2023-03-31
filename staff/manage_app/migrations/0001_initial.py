@@ -26,10 +26,7 @@ class Migration(migrations.Migration):
                 ("name", models.CharField(max_length=50)),
                 ("email", models.EmailField(blank=True, max_length=254)),
             ],
-            options={
-                "db_table": "author",
-                "managed": False,
-            },
+            options={"db_table": "author", "managed": False,},
         ),
         migrations.CreateModel(
             name="Book",
@@ -43,10 +40,7 @@ class Migration(migrations.Migration):
                 ("price", models.DecimalField(decimal_places=2, max_digits=10)),
                 ("description", models.TextField(blank=True, max_length=600)),
             ],
-            options={
-                "db_table": "book",
-                "managed": False,
-            },
+            options={"db_table": "book", "managed": False,},
         ),
         migrations.CreateModel(
             name="Book_Image",
@@ -62,10 +56,7 @@ class Migration(migrations.Migration):
                 ),
                 ("image", models.ImageField(upload_to="")),
             ],
-            options={
-                "db_table": "book_image",
-                "managed": False,
-            },
+            options={"db_table": "book_image", "managed": False,},
         ),
         migrations.CreateModel(
             name="BookAuthor",
@@ -80,10 +71,7 @@ class Migration(migrations.Migration):
                     ),
                 ),
             ],
-            options={
-                "db_table": "book_author",
-                "managed": False,
-            },
+            options={"db_table": "book_author", "managed": False,},
         ),
         migrations.CreateModel(
             name="Card",
@@ -103,10 +91,7 @@ class Migration(migrations.Migration):
                 ("branch", models.CharField(blank=True, max_length=50)),
                 ("expireDate", models.DateField()),
             ],
-            options={
-                "db_table": "card",
-                "managed": False,
-            },
+            options={"db_table": "card", "managed": False,},
         ),
         migrations.CreateModel(
             name="Customer",
@@ -126,10 +111,7 @@ class Migration(migrations.Migration):
                 ("address", models.CharField(blank=True, max_length=120)),
                 ("avatar", models.ImageField(blank=True, upload_to="")),
             ],
-            options={
-                "db_table": "customer",
-                "managed": False,
-            },
+            options={"db_table": "customer", "managed": False,},
         ),
         migrations.CreateModel(
             name="Export",
@@ -146,10 +128,7 @@ class Migration(migrations.Migration):
                 ("quantity", models.IntegerField()),
                 ("exportTime", models.DateTimeField(auto_now_add=True)),
             ],
-            options={
-                "db_table": "export_history",
-                "managed": False,
-            },
+            options={"db_table": "export_history", "managed": False,},
         ),
         migrations.CreateModel(
             name="Import",
@@ -166,10 +145,7 @@ class Migration(migrations.Migration):
                 ("quantity", models.IntegerField()),
                 ("importTime", models.DateTimeField(auto_now_add=True)),
             ],
-            options={
-                "db_table": "import_history",
-                "managed": False,
-            },
+            options={"db_table": "import_history", "managed": False,},
         ),
         migrations.CreateModel(
             name="Inventory",
@@ -185,10 +161,7 @@ class Migration(migrations.Migration):
                 ),
                 ("quantity", models.IntegerField()),
             ],
-            options={
-                "db_table": "store",
-                "managed": False,
-            },
+            options={"db_table": "store", "managed": False,},
         ),
         migrations.CreateModel(
             name="Keyword",
@@ -204,10 +177,7 @@ class Migration(migrations.Migration):
                 ),
                 ("keyword", models.CharField(max_length=20)),
             ],
-            options={
-                "db_table": "keyword",
-                "managed": False,
-            },
+            options={"db_table": "keyword", "managed": False,},
         ),
         migrations.CreateModel(
             name="Order",
@@ -240,10 +210,7 @@ class Migration(migrations.Migration):
                 ("shippingAddress", models.CharField(blank=True, max_length=120)),
                 ("complete", models.BooleanField(default=False)),
             ],
-            options={
-                "db_table": "order",
-                "managed": False,
-            },
+            options={"db_table": "order", "managed": False,},
         ),
         migrations.CreateModel(
             name="OrderItem",
@@ -271,10 +238,7 @@ class Migration(migrations.Migration):
                     ),
                 ),
             ],
-            options={
-                "db_table": "order_item",
-                "managed": False,
-            },
+            options={"db_table": "order_item", "managed": False,},
         ),
         migrations.CreateModel(
             name="Payment",
@@ -299,10 +263,7 @@ class Migration(migrations.Migration):
                 ),
                 ("amount", models.DecimalField(decimal_places=2, max_digits=10)),
             ],
-            options={
-                "db_table": "payment",
-                "managed": False,
-            },
+            options={"db_table": "payment", "managed": False,},
         ),
         migrations.CreateModel(
             name="Publisher",
@@ -320,10 +281,7 @@ class Migration(migrations.Migration):
                 ("email", models.EmailField(blank=True, max_length=254)),
                 ("phone", models.CharField(blank=True, max_length=20)),
             ],
-            options={
-                "db_table": "publisher",
-                "managed": False,
-            },
+            options={"db_table": "publisher", "managed": False,},
         ),
         migrations.CreateModel(
             name="Staff",
@@ -342,10 +300,7 @@ class Migration(migrations.Migration):
                 ("phone", models.CharField(blank=True, max_length=20)),
                 ("avatar", models.ImageField(blank=True, upload_to="")),
             ],
-            options={
-                "db_table": "staff",
-                "managed": False,
-            },
+            options={"db_table": "staff", "managed": False,},
         ),
         migrations.CreateModel(
             name="Storage",
@@ -362,10 +317,7 @@ class Migration(migrations.Migration):
                 ("country", models.CharField(max_length=20)),
                 ("location", models.CharField(max_length=120)),
             ],
-            options={
-                "db_table": "storage",
-                "managed": False,
-            },
+            options={"db_table": "storage", "managed": False,},
         ),
         migrations.CreateModel(
             name="Topic",
@@ -381,10 +333,7 @@ class Migration(migrations.Migration):
                 ),
                 ("name", models.CharField(max_length=20)),
             ],
-            options={
-                "db_table": "topic",
-                "managed": False,
-            },
+            options={"db_table": "topic", "managed": False,},
         ),
         migrations.CreateModel(
             name="Electronic",
@@ -403,10 +352,7 @@ class Migration(migrations.Migration):
                 ("rentDuration", models.IntegerField(default=1)),
                 ("link", models.FileField(upload_to="uploads/")),
             ],
-            options={
-                "db_table": "electronic",
-                "managed": False,
-            },
+            options={"db_table": "electronic", "managed": False,},
         ),
         migrations.CreateModel(
             name="Traditional",
@@ -423,10 +369,7 @@ class Migration(migrations.Migration):
                 ),
                 ("allowNumber", models.IntegerField(default=1)),
             ],
-            options={
-                "db_table": "traditional",
-                "managed": False,
-            },
+            options={"db_table": "traditional", "managed": False,},
         ),
         migrations.CreateModel(
             name="Review",
@@ -465,9 +408,6 @@ class Migration(migrations.Migration):
                     ),
                 ),
             ],
-            options={
-                "db_table": "review",
-                "unique_together": {("customer", "book")},
-            },
+            options={"db_table": "review", "unique_together": {("customer", "book")},},
         ),
     ]

@@ -59,12 +59,7 @@ def save_import(request, form, form_temp, list_temp):
                 .order_by("-importTime")
             )
 
-            data["list"] = render_to_string(
-                list_temp,
-                {
-                    "import_obj": import_history,
-                },
-            )
+            data["list"] = render_to_string(list_temp, {"import_obj": import_history,},)
         else:
             data["form_is_valid"] = False
 
@@ -92,12 +87,7 @@ def save_export(request, form, form_temp, list_temp):
                 .order_by("-exportTime")
             )
 
-            data["list"] = render_to_string(
-                list_temp,
-                {
-                    "export_obj": export_history,
-                },
-            )
+            data["list"] = render_to_string(list_temp, {"export_obj": export_history,},)
         else:
             data["form_is_valid"] = False
 
@@ -120,10 +110,7 @@ def save_error_payment(request, form, form_temp, list_temp):
             ).select_related("customer")
 
             data["list"] = render_to_string(
-                list_temp,
-                {
-                    "error_payment_list": error_payment_list,
-                },
+                list_temp, {"error_payment_list": error_payment_list,},
             )
         else:
             data["form_is_valid"] = False

@@ -22,10 +22,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "*fvs-i#$=gsfaea3t#i)a%r9*h**2jt%9=3^%(f6io8v2qm)h$"
+SECRET_KEY = os.getenv(
+    "SECRET_KEY", default="*fvs-i#$=gsfaea3t#i)a%r9*h**2jt%9=3^%(f6io8v2qm)h$"
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG', '1').lower() in ['true', 't', '1']
 
 ALLOWED_HOSTS = ["127.0.0.1", "192.168.43.125"]
 
@@ -82,10 +84,7 @@ WSGI_APPLICATION = "staff.wsgi.application"
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
 DATABASES = {
-    "default": dj_database_url.config(
-        conn_max_age=600,
-        conn_health_checks=True,
-    )
+    "default": dj_database_url.config(conn_max_age=600, conn_health_checks=True,)
 }
 
 
@@ -96,15 +95,9 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
-    {
-        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
-    },
+    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",},
+    {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",},
+    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",},
 ]
 
 
@@ -120,6 +113,17 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = False
+
+# Tables
+# https://django-tables2.readthedocs.io/en/latest/index.html
+
+DJANGO_TABLES2_TEMPLATE = "django_tables2/bootstrap4.html"
+
+
+# Forms
+# https://django-crispy-forms.readthedocs.io/en/latest/index.html
+
+CRISPY_TEMPLATE_PACK = "bootstrap4"
 
 
 # Static files (CSS, JavaScript, Images)

@@ -9,11 +9,16 @@ services:
       MYSQL_PASSWORD: Admin.12345
       MYSQL_ROOT_PASSWORD: admin
   web:
-    build: .
+    build: ./customer
     command: python manage.py runserver 0.0.0.0:8000
-    volumes:
-      - .:/code
     ports:
-      - "8000:8000"
+      - 8000:8000
+    depends_on:
+      - db
+  staff:
+    build: ./staff
+    command: python manage.py runserver 0.0.0.0:8000
+    ports:
+      - 8001:8000
     depends_on:
       - db
