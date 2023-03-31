@@ -149,6 +149,6 @@ if not DEBUG:    # Tell Django to copy statics to the `staticfiles` directory
 
 MEDIA_ROOT = os.path.join(BASE_DIR, "static/images")
 
-MEDIA_URL = "/images/"
+MEDIA_URL = "/static/images/"
 
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
